@@ -1,18 +1,18 @@
 <script lang="ts">
   import { Bell, ChevronDown } from 'lucide-svelte';
-  import { appState, clubs, userProfile } from '$lib/stores/mockData.svelte';
+  import { appState, teams, userProfile } from '$lib/stores/mockData.svelte';
   import Avatar from '$lib/components/ui/Avatar.svelte';
   import { page } from '$app/stores';
 
-  let showClubDropdown = $state(false);
+  let showTeamDropdown = $state(false);
 
   function toggleDropdown() {
-    showClubDropdown = !showClubDropdown;
+    showTeamDropdown = !showTeamDropdown;
   }
 
-  function selectClub(id: string) {
-    appState.setActiveClub(id);
-    showClubDropdown = false;
+  function selectTeam(id: string) {
+    appState.setActiveTeam(id);
+    showTeamDropdown = false;
   }
 
   // Generate page title from route
@@ -28,21 +28,21 @@
   <div class="header-left">
     <div class="club-switcher">
       <button class="club-btn" onclick={toggleDropdown}>
-        <span class="club-logo">{appState.activeClub.logo}</span>
-        <span class="club-name">{appState.activeClub.name}</span>
+        <span class="club-logo">{appState.activeTeam.logo}</span>
+        <span class="club-name">{appState.activeClub.name} - {appState.activeTeam.name}</span>
         <ChevronDown size={16} class="text-muted" />
       </button>
 
-      {#if showClubDropdown}
+      {#if showTeamDropdown}
         <div class="club-dropdown">
-          {#each clubs as club}
+          {#each teams as team}
             <button 
               class="dropdown-item" 
-              class:active={club.id === appState.activeClubId}
-              onclick={() => selectClub(club.id)}
+              class:active={team.id === appState.activeTeamId}
+              onclick={() => selectTeam(team.id)}
             >
-              <span class="club-logo">{club.logo}</span>
-              {club.name}
+              <span class="club-logo">{team.logo}</span>
+              {appState.activeClub.name} - {team.name}
             </button>
           {/each}
         </div>
