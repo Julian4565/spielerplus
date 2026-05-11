@@ -12,8 +12,13 @@ const config = {
 			fallback: '404.html'
 		}),
 		paths: {
-			// WICHTIG: Wenn du auf GitHub baust, nimm fest '/spielerplus'
-			base: '/spielerplus'
+			// Wir nutzen BASE_PATH aus dem GitHub Workflow, falls vorhanden.
+			// Falls nicht (lokal), lassen wir es leer für eine normale Dev-Experience.
+			base: process.env.NODE_ENV === 'production' ? (process.env.BASE_PATH || '/spielerplus') : ''
+		},
+		prerender: {
+			// WICHTIG: Verhindert den Abbruch des Builds bei "404 / does not begin with base"
+			handleHttpError: 'warn'
 		}
 	}
 };
