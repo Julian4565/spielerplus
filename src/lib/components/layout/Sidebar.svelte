@@ -10,18 +10,19 @@
     Trophy
   } from 'lucide-svelte';
   import { page } from '$app/stores';
+  import { base } from '$app/paths';
 
   let currentPath = $derived($page.url.pathname);
 
   const navItems = [
-    { name: 'Home', href: '/', icon: Home },
-    { name: 'Events', href: '/events', icon: Trophy },
-    { name: 'Calendar', href: '/calendar', icon: Calendar },
-    { name: 'Team', href: '/team', icon: Users },
-    { name: 'Attendance', href: '/attendance', icon: CheckSquare },
-    { name: 'Carpooling', href: '/carpooling', icon: Car },
-    { name: 'Finances', href: '/finances', icon: Wallet },
-    { name: 'Settings', href: '/settings', icon: Settings },
+    { name: 'Home', href: `${base}/`, icon: Home },
+    { name: 'Events', href: `${base}/events`, icon: Trophy },
+    { name: 'Calendar', href: `${base}/calendar`, icon: Calendar },
+    { name: 'Team', href: `${base}/team`, icon: Users },
+    { name: 'Attendance', href: `${base}/attendance`, icon: CheckSquare },
+    { name: 'Carpooling', href: `${base}/carpooling`, icon: Car },
+    { name: 'Finances', href: `${base}/finances`, icon: Wallet },
+    { name: 'Settings', href: `${base}/settings`, icon: Settings },
   ];
 </script>
 
