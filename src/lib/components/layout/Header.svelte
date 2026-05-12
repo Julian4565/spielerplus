@@ -55,11 +55,11 @@
   </div>
 
   <div class="header-right">
-    <button class="notification-btn">
+    <button class="interactive-icon notification-btn" onclick={() => alert('Notifications coming soon!')}>
       <Bell size={20} />
       <span class="badge">3</span>
     </button>
-    <div class="user-profile">
+    <div class="user-profile interactive-icon" onclick={() => alert('Profile settings coming soon!')}>
       <Avatar src={userProfile.avatar} alt={userProfile.name} size="sm" />
     </div>
   </div>
@@ -73,7 +73,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1.5rem;
+    padding: 0 2rem;
     position: sticky;
     top: 0;
     z-index: 90;
@@ -82,7 +82,7 @@
   .header-left, .header-right {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
     flex: 1;
   }
 
@@ -97,10 +97,11 @@
   }
 
   .page-title {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin: 0;
     color: var(--text-main);
+    letter-spacing: -0.02em;
   }
 
   /* Club Switcher */
@@ -111,82 +112,87 @@
   .club-btn {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    background: transparent;
+    gap: 0.75rem;
+    background: var(--bg-color);
     border: 1px solid var(--border);
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--radius-sm);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 600;
     color: var(--text-main);
-    transition: all 0.2s;
+    transition: var(--transition);
   }
 
   .club-btn:hover {
-    background: var(--bg-color);
+    background: var(--border);
+    border-color: var(--primary);
+  }
+
+  .club-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  :global(.club-logo img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   .club-dropdown {
     position: absolute;
-    top: 110%;
+    top: 120%;
     left: 0;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-    width: 200px;
+    width: 260px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    padding: 0.5rem;
   }
 
   .dropdown-item {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding: 0.75rem 1rem;
     background: transparent;
     border: none;
     text-align: left;
     cursor: pointer;
     font-weight: 500;
+    border-radius: var(--radius-md);
     color: var(--text-main);
+    transition: var(--transition);
   }
 
   .dropdown-item:hover {
     background: var(--bg-color);
+    color: var(--primary);
   }
 
   .dropdown-item.active {
     color: var(--primary);
-    background: rgba(111, 177, 160, 0.1);
+    background: rgba(220, 38, 38, 0.05);
   }
 
   /* Notifications */
   .notification-btn {
     position: relative;
-    background: transparent;
-    border: none;
-    cursor: pointer;
     color: var(--text-muted);
-    padding: 0.5rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-  }
-
-  .notification-btn:hover {
-    background: var(--bg-color);
-    color: var(--text-main);
   }
 
   .badge {
     position: absolute;
-    top: 2px;
-    right: 2px;
-    background: var(--danger);
+    top: 4px;
+    right: 4px;
+    background: var(--primary);
     color: white;
     font-size: 0.65rem;
     font-weight: bold;
@@ -197,13 +203,17 @@
     align-items: center;
     justify-content: center;
     padding: 0 4px;
+    border: 2px solid var(--surface);
   }
 
   .user-profile {
-    cursor: pointer;
+    padding: 4px;
   }
 
   @media (max-width: 768px) {
+    .header {
+      padding: 0 1rem;
+    }
     .header-center {
       display: none;
     }
@@ -212,3 +222,4 @@
     }
   }
 </style>
+

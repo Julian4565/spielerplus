@@ -66,8 +66,8 @@
           <div class="day-number">{day}</div>
           <div class="day-events">
             {#each getEventsForDay(day) as event}
-              <div class="event-block {event.type}">
-                <span class="time">{event.startTime}</span>
+              <div class="event-block {event.type}" class:ucl-block={event.isUCL}>
+                <span class="comp">{event.competition?.slice(0, 3) || 'EV'}</span>
                 <span class="title">{event.title}</span>
               </div>
             {/each}
@@ -83,102 +83,138 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   .calendar-header h2 {
     margin: 0;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
   }
 
   .month-selector {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
+    background: var(--surface);
+    padding: 0.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
   }
 
   .month-selector h3 {
     margin: 0;
-    min-width: 150px;
+    min-width: 180px;
     text-align: center;
+    font-weight: 700;
+    font-size: 1.125rem;
   }
 
   .icon-btn {
-    background: white;
+    background: var(--bg-color);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     padding: 0.5rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: var(--transition);
   }
 
   .icon-btn:hover {
-    background: var(--bg-color);
+    background: var(--border);
+    color: var(--primary);
   }
 
   .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    border-left: 1px solid var(--border);
-    border-top: 1px solid var(--border);
+    background-color: var(--border);
+    gap: 1px;
+    border: 1px solid var(--border);
   }
 
   .weekday {
-    padding: 0.75rem;
+    padding: 1rem;
     text-align: center;
-    font-weight: 600;
-    font-size: 0.875rem;
+    font-weight: 700;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     background-color: var(--bg-color);
   }
 
   .day-cell {
-    min-height: 120px;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 0.5rem;
-    background: white;
+    min-height: 140px;
+    padding: 0.75rem;
+    background: var(--surface);
+    transition: var(--transition);
+    cursor: pointer;
+  }
+
+  .day-cell:hover:not(.empty) {
+    background: #fffafa;
+    transform: scale(1.01);
+    z-index: 10;
+    box-shadow: var(--shadow-md);
   }
 
   .day-cell.empty {
-    background-color: #fafafa;
+    background-color: var(--bg-color);
+    opacity: 0.5;
   }
 
   .day-number {
-    font-weight: 500;
-    margin-bottom: 0.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
     color: var(--text-main);
+    font-size: 1rem;
   }
 
   .day-events {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.4rem;
   }
 
   .event-block {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: var(--radius-sm);
     display: flex;
-    gap: 0.25rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
-  }
-
-  .event-block .time {
+    align-items: center;
+    gap: 0.5rem;
     font-weight: 600;
-    opacity: 0.8;
+    transition: var(--transition);
   }
 
-  .event-block.training { background-color: #e0f2fe; color: #0369a1; }
-  .event-block.match { background-color: #fef3c7; color: #b45309; }
-  .event-block.meeting { background-color: #f3e8ff; color: #7e22ce; }
+  .event-block:hover {
+    filter: brightness(0.95);
+    transform: translateX(2px);
+  }
+
+  .event-block .comp {
+    font-weight: 800;
+    opacity: 0.7;
+    font-size: 0.6rem;
+    background: rgba(0,0,0,0.1);
+    padding: 1px 3px;
+    border-radius: 2px;
+  }
+
+  .event-block.training { background-color: #f1f5f9; color: #475569; }
+  .event-block.match { background-color: var(--primary); color: white; }
+  .event-block.meeting { background-color: #fef3c7; color: #b45309; }
+
+  .ucl-block {
+    background: linear-gradient(135deg, #1e293b, #334155) !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
 
   @media (max-width: 768px) {
     .calendar-grid {

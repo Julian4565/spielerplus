@@ -1,25 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --primary: #6FB1A0;
-  --primary-hover: #5a9484;
-  --bg-color: #F5F7F8;
+  --primary: #dc2626; /* FC Bayern Red */
+  --primary-hover: #b91c1c;
+  --bg-color: #f8fafc;
   --surface: #ffffff;
-  --text-main: #1f2937;
-  --text-muted: #6b7280;
-  --border: #e5e7eb;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
   --danger: #ef4444;
   --success: #10b981;
   --warning: #f59e0b;
+  --accent: #1e293b;
   
   --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-full: 9999px;
   
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 *, *::before, *::after {
@@ -38,10 +41,24 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+  transition: var(--transition);
 }
 
 button {
   font-family: inherit;
+  transition: var(--transition);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Layout Utilities */
@@ -54,13 +71,13 @@ button {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 250px; /* Sidebar width */
+  margin-left: 250px;
   transition: margin-left 0.3s ease;
 }
 
 .page-content {
-  padding: 1.5rem;
-  max-width: 1200px;
+  padding: 2rem;
+  max-width: 1400px;
   margin: 0 auto;
   width: 100%;
 }
@@ -68,8 +85,37 @@ button {
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
-    margin-bottom: 60px; /* Bottom nav for mobile potentially */
+    margin-bottom: 70px;
   }
+  .page-content {
+    padding: 1rem;
+  }
+}
+
+/* Interactive Elements */
+.hover-scale {
+  transition: var(--transition);
+}
+.hover-scale:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: var(--shadow-lg);
+}
+
+.interactive-icon {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.interactive-icon:hover {
+  background-color: var(--border);
+  color: var(--primary);
+}
+.interactive-icon:active {
+  transform: scale(0.9);
 }
 
 /* Flex utilities */
@@ -109,3 +155,4 @@ button {
 .font-bold { font-weight: 700; }
 .text-muted { color: var(--text-muted); }
 .text-primary { color: var(--primary); }
+

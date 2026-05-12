@@ -28,9 +28,9 @@
 
 <aside class="sidebar">
   <div class="sidebar-header">
-    <div class="logo">
-      <span class="logo-icon">🏅</span>
-      <span class="logo-text">TeamApp</span>
+    <div class="logo interactive-icon" onclick={() => window.location.href = '/'}>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg" alt="Bayern Logo" class="logo-img" />
+      <span class="logo-text">SpielerPlus</span>
     </div>
   </div>
 
@@ -41,7 +41,7 @@
         class="nav-item" 
         class:active={currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))}
       >
-        <item.icon size={20} class="nav-icon" />
+        <item.icon size={22} class="nav-icon" />
         <span class="nav-text">{item.name}</span>
       </a>
     {/each}
@@ -60,31 +60,36 @@
     display: flex;
     flex-direction: column;
     z-index: 100;
+    box-shadow: var(--shadow-sm);
   }
 
   .sidebar-header {
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
     border-bottom: 1px solid var(--border);
   }
 
   .logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--primary);
+    gap: 1rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
   }
 
-  .logo-icon {
-    font-size: 1.5rem;
+  .logo-img {
+    width: 40px;
+    height: 40px;
   }
 
   .sidebar-nav {
-    padding: 1rem 0.5rem;
+    padding: 1.5rem 0.75rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
     flex: 1;
     overflow-y: auto;
   }
@@ -93,20 +98,26 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
     color: var(--text-muted);
-    font-weight: 500;
-    transition: all 0.2s ease;
+    font-weight: 600;
+    transition: var(--transition);
   }
 
   .nav-item:hover {
-    background-color: rgba(111, 177, 160, 0.1);
+    background-color: var(--bg-color);
     color: var(--primary);
+    transform: translateX(4px);
   }
 
   .nav-item.active {
     background-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+  }
+
+  .nav-item.active .nav-icon {
     color: white;
   }
 
@@ -115,10 +126,12 @@
       top: auto;
       bottom: 0;
       width: 100%;
-      height: 60px;
+      height: 70px;
       border-right: none;
       border-top: 1px solid var(--border);
       flex-direction: row;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
     }
 
     .sidebar-header {
@@ -131,6 +144,7 @@
       padding: 0;
       align-items: center;
       width: 100%;
+      gap: 0;
     }
 
     .nav-item {
@@ -138,16 +152,21 @@
       gap: 0.25rem;
       padding: 0.5rem;
       border-radius: 0;
+      flex: 1;
+      font-size: 0.65rem;
     }
 
-    .nav-text {
-      font-size: 0.65rem;
+    .nav-item:hover {
+      transform: none;
+      background: transparent;
     }
 
     .nav-item.active {
       background-color: transparent;
       color: var(--primary);
-      border-top: 2px solid var(--primary);
+      box-shadow: none;
+      border-top: 3px solid var(--primary);
     }
   }
 </style>
+
