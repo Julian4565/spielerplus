@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Bell, ChevronDown } from 'lucide-svelte';
+  import { Bell, ChevronDown, Activity, CheckCircle2 } from 'lucide-svelte';
   import { appState, teams, userProfile } from '$lib/stores/mockData.svelte';
+  import { footballData, refreshFootballData } from '$lib/stores/footballStore.svelte.ts';
   import Avatar from '$lib/components/ui/Avatar.svelte';
   import { page } from '$app/stores';
 
@@ -20,7 +21,7 @@
     const path = $page.url.pathname;
     if (path === '/') return 'Home';
     const segment = path.split('/')[1];
-    return segment ? segment.charAt(0).toUpperCase() + segment.slice(1) : 'Home';
+    return segment ? segment.charAt(0).toUpperCase() + segment.slice(1).replace('-', ' ') : 'Home';
   });
 </script>
 
@@ -55,6 +56,23 @@
   </div>
 
   <div class="header-right">
+    <div class="sync-status" class:syncing={footballData.loading}>
+      {#if footballData.loading}
+        <Activity size={16} class="spin" />
+        <span class="sync-text">Syncing...</span>
+      {:else if footballData.error}
+        <button class="sync-error-btn" onclick={() => refreshFootballData()} title={footballData.error}>
+          <Activity size={16} />
+          <span>Error</span>
+        </button>
+      {:else}
+        <button class="sync-success-btn" onclick={() => refreshFootballData()} title="Data up to date">
+          <CheckCircle2 size={16} />
+          <span>Live</span>
+        </button>
+      {/if}
+    </div>
+
     <button class="interactive-icon notification-btn" onclick={() => alert('Notifications coming soon!')}>
       <Bell size={20} />
       <span class="badge">3</span>
@@ -208,6 +226,71 @@
 
   .user-profile {
     padding: 4px;
+  }
+
+  /* Sync Status */
+  .sync-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: var(--transition);
+  }
+
+  .syncing {
+    color: var(--primary);
+    background: rgba(220, 38, 38, 0.05);
+  }
+
+  .sync-text {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+
+  .sync-success-btn, .sync-error-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 0;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.75rem;
+    transition: var(--transition);
+  }
+
+  .sync-success-btn {
+    color: #10b981;
+  }
+
+  .sync-success-btn:hover {
+    color: #059669;
+  }
+
+  .sync-error-btn {
+    color: #ef4444;
+  }
+
+  .sync-error-btn:hover {
+    color: #dc2626;
+  }
+
+  .spin {
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 
   @media (max-width: 768px) {

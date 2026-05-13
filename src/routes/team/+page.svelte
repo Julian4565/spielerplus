@@ -7,8 +7,28 @@
 
   let searchQuery = $state('');
   
+  // Combine real squad with mock data to enrich it (avatars, etc)
+  let allMembers = $derived(() => {
+    if (footballData.squad.length === 0) return teamMembers;
+    
+    return footballData.squad.map((player: any) => {
+      // Find matching mock member for avatar/availability
+      const mock = teamMembers.find(m => m.name === player.name);
+      return {
+        id: player.id.toString(),
+        name: player.name,
+        role: player.position === 'Coach' ? 'Staff' : 'Player',
+        position: player.position,
+        avatar: mock?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=random&color=fff`,
+        availability: mock?.availability || 'available',
+        jerseyNumber: mock?.jerseyNumber || (player.id % 99),
+        birthdate: player.dateOfBirth || '1990-01-01'
+      };
+    });
+  });
+
   let filteredMembers = $derived(
-    teamMembers.filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    allMembers().filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 </script>
 

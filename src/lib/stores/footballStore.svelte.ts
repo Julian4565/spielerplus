@@ -42,9 +42,10 @@ export async function refreshFootballData() {
     if (results.every(r => r.status === 'rejected')) {
       const error = (results[0] as PromiseRejectedResult).reason;
       footballData.error = error.message || 'Failed to fetch any data';
+    } else {
+      footballData.lastUpdated = Date.now();
     }
 
-    footballData.lastUpdated = Date.now();
     console.log('[FootballStore] Data refresh complete', {
       fixtures: footballData.fixtures.length,
       results: footballData.results.length,
