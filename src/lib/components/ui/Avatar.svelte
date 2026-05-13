@@ -16,7 +16,25 @@
 
   <div class="avatar avatar-{size} {className}">
   {#if src}
-    <img {src} {alt} class="avatar-img" onerror={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling.style.display = 'flex'; }} />
+    <img 
+      {src} 
+      {alt} 
+      class="avatar-img" 
+      loading="eager"
+      decoding="async"
+      onerror={(e) => { 
+        const target = e.currentTarget as HTMLImageElement;
+        const placeholder = '/images/players/placeholder.svg';
+        if (target.src !== window.location.origin + placeholder && !target.src.endsWith(placeholder)) {
+          target.src = placeholder;
+        } else {
+          // If placeholder also fails, hide image and show initials
+          target.style.display = 'none';
+          const sibling = target.nextElementSibling as HTMLElement;
+          if (sibling) sibling.style.display = 'flex';
+        }
+      }} 
+    />
     <span class="avatar-initials" style="display: none;">{initials}</span>
   {:else}
     <span class="avatar-initials">{initials}</span>

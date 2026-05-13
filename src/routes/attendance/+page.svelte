@@ -47,7 +47,19 @@
       <div class="attendance-item hover-row">
         <div class="member-col">
           <div class="avatar-wrapper">
-            <img src={member.avatar} alt={member.name} class="attendance-avatar" onerror={(e) => e.currentTarget.src = 'https://img.a.transfermarkt.technology/portrait/header/placeholder.jpg'} />
+            <img 
+              src={member.avatar} 
+              alt={member.name} 
+              class="attendance-avatar" 
+              loading="lazy"
+              onerror={(e) => { 
+                const target = e.currentTarget as HTMLImageElement;
+                const placeholder = '/images/players/placeholder.svg';
+                if (target.src !== window.location.origin + placeholder && !target.src.endsWith(placeholder)) {
+                  target.src = placeholder;
+                }
+              }} 
+            />
             {#if member.jerseyNumber}
               <span class="jersey-sm">{member.jerseyNumber}</span>
             {/if}

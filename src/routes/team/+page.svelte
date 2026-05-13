@@ -29,7 +29,19 @@
     <Card noPadding class="member-card hover-scale">
       <div class="member-visual">
         <div class="member-photo-container">
-          <img src={member.avatar} alt={member.name} class="member-photo" onerror={(e) => e.currentTarget.src = 'https://img.a.transfermarkt.technology/portrait/header/placeholder.jpg'} />
+          <img 
+            src={member.avatar} 
+            alt={member.name} 
+            class="member-photo" 
+            loading="eager"
+            onerror={(e) => { 
+              const target = e.currentTarget as HTMLImageElement;
+              const placeholder = '/images/players/placeholder.svg';
+              if (target.src !== window.location.origin + placeholder && !target.src.endsWith(placeholder)) {
+                target.src = placeholder;
+              }
+            }} 
+          />
           <div class="jersey-number">{member.jerseyNumber || '—'}</div>
         </div>
         <div class="availability-indicator {member.availability}" title={member.availability}></div>

@@ -90,7 +90,19 @@
       <div class="birthdays-list">
         {#each birthdays as person}
           <div class="birthday-item">
-            <img src={person.avatar} alt={person.name} class="bday-avatar" onerror={(e) => e.currentTarget.src = 'https://img.a.transfermarkt.technology/portrait/header/placeholder.jpg'} />
+            <img 
+              src={person.avatar} 
+              alt={person.name} 
+              class="bday-avatar" 
+              loading="eager"
+              onerror={(e) => { 
+                const target = e.currentTarget as HTMLImageElement;
+                const placeholder = '/images/players/placeholder.svg';
+                if (target.src !== window.location.origin + placeholder && !target.src.endsWith(placeholder)) {
+                  target.src = placeholder;
+                }
+              }} 
+            />
             <div class="bday-info">
               <p class="name">{person.name}</p>
               <p class="date">Celebrating birthday soon!</p>
