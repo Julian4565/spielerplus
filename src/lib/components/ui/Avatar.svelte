@@ -14,9 +14,10 @@
   let initials = $derived(alt.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase());
 </script>
 
-<div class="avatar avatar-{size} {className}">
+  <div class="avatar avatar-{size} {className}">
   {#if src}
-    <img {src} {alt} class="avatar-img" />
+    <img {src} {alt} class="avatar-img" onerror={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling.style.display = 'flex'; }} />
+    <span class="avatar-initials" style="display: none;">{initials}</span>
   {:else}
     <span class="avatar-initials">{initials}</span>
   {/if}

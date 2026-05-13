@@ -90,7 +90,7 @@
       <div class="birthdays-list">
         {#each birthdays as person}
           <div class="birthday-item">
-            <img src={person.avatar} alt={person.name} class="bday-avatar" />
+            <img src={person.avatar} alt={person.name} class="bday-avatar" onerror={(e) => e.currentTarget.src = 'https://img.a.transfermarkt.technology/portrait/header/placeholder.jpg'} />
             <div class="bday-info">
               <p class="name">{person.name}</p>
               <p class="date">Celebrating birthday soon!</p>

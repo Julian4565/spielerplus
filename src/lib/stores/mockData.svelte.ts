@@ -27,7 +27,7 @@ const ALL_EVENTS = [
 ];
 
 const ALL_MEMBERS = [
-  // Football Team - Real Portraits
+  // Football Team - Real Portraits (Transfermarkt)
   { id: 'f1', teamId: 'football', clubId: 'bayern', name: 'Harry Kane', role: 'Player', position: 'Striker', birthdate: '1993-07-28', avatar: 'https://img.a.transfermarkt.technology/portrait/header/132098-1711617444.jpg', availability: 'available', attendance: 98 },
   { id: 'f2', teamId: 'football', clubId: 'bayern', name: 'Thomas Müller', role: 'Player', position: 'Attacking Midfield', birthdate: '1989-09-13', avatar: 'https://img.a.transfermarkt.technology/portrait/header/58358-1711617498.jpg', availability: 'available', attendance: 99 },
   { id: 'f3', teamId: 'football', clubId: 'bayern', name: 'Jamal Musiala', role: 'Player', position: 'Attacking Midfield', birthdate: '2003-02-26', avatar: 'https://img.a.transfermarkt.technology/portrait/header/580195-1711617300.jpg', availability: 'available', attendance: 96 },
@@ -41,9 +41,12 @@ const ALL_MEMBERS = [
   { id: 'f11', teamId: 'football', clubId: 'bayern', name: 'Serge Gnabry', role: 'Player', position: 'Winger', birthdate: '1995-07-14', avatar: 'https://img.a.transfermarkt.technology/portrait/header/159471-1711617163.jpg', availability: 'available', attendance: 88 },
   { id: 'f12', teamId: 'football', clubId: 'bayern', name: 'Kingsley Coman', role: 'Player', position: 'Winger', birthdate: '1996-06-13', avatar: 'https://img.a.transfermarkt.technology/portrait/header/243714-1711617222.jpg', availability: 'sick', attendance: 85 },
   
-  // Basketball Team
-  { id: 'b1', teamId: 'basketball', clubId: 'bayern', name: 'Carsen Edwards', role: 'Player', position: 'Point Guard', birthdate: '1998-03-12', avatar: 'https://img.a.transfermarkt.technology/portrait/header/placeholder.jpg', availability: 'available', attendance: 95 },
-  { id: 'b8', teamId: 'basketball', clubId: 'bayern', name: 'Serge Ibaka', role: 'Player', position: 'Power Forward', birthdate: '1989-09-18', avatar: 'https://img.a.transfermarkt.technology/portrait/header/placeholder.jpg', availability: 'available', attendance: 96 },
+  // Basketball Team - Real Profiles
+  { id: 'b1', teamId: 'basketball', clubId: 'bayern', name: 'Carsen Edwards', role: 'Player', position: 'Point Guard', birthdate: '1998-03-12', avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Carsen_Edwards_3_FC_Bayern_M%C3%BCnchen_%28Basketball%29_20241112_%282%29_%28cropped%29.jpg/800px-Carsen_Edwards_3_FC_Bayern_M%C3%BCnchen_%28Basketball%29_20241112_%282%29_%28cropped%29.jpg', availability: 'available', attendance: 95 },
+  { id: 'b2', teamId: 'basketball', clubId: 'bayern', name: 'Serge Ibaka', role: 'Player', position: 'Power Forward', birthdate: '1989-09-18', avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Serge_Ibaka_1_FC_Bayern_M%C3%BCnchen_%28Basketball%29_20231201_%28cropped%29.jpg/800px-Serge_Ibaka_1_FC_Bayern_M%C3%BCnchen_%28Basketball%29_20231201_%28cropped%29.jpg', availability: 'available', attendance: 96 },
+  { id: 'b3', teamId: 'basketball', clubId: 'bayern', name: 'Isaac Bonga', role: 'Player', position: 'Small Forward', birthdate: '1999-11-08', avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Isaac_Bonga_0_FC_Bayern_M%C3%BCnchen_%28Basketball%29_20231201_%28cropped%29.jpg/800px-Isaac_Bonga_0_FC_Bayern_M%C3%BCnchen_%28Basketball%29_20231201_%28cropped%29.jpg', availability: 'available', attendance: 92 },
+  { id: 'b4', teamId: 'basketball', clubId: 'bayern', name: 'Andreas Obst', role: 'Player', position: 'Shooting Guard', birthdate: '1996-07-13', avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Andreas_Obst_22_FC_Bayern_M%C3%BCnchen_%28Basketball%29_20241112_%28cropped%29.jpg/800px-Andreas_Obst_22_FC_Bayern_M%C3%BCnchen_%28Basketball%29_20241112_%28cropped%29.jpg', availability: 'available', attendance: 97 },
+  { id: 'b5', teamId: 'basketball', clubId: 'bayern', name: 'Nick Weiler-Babb', role: 'Player', position: 'Shooting Guard', birthdate: '1995-12-12', avatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Nick_Weiler-Babb_00_FC_Bayern_M%C3%BCnchen_%28Basketball%29_20241112_%28cropped%29.jpg/800px-Nick_Weiler-Babb_00_FC_Bayern_M%C3%BCnchen_%28Basketball%29_20241112_%28cropped%29.jpg', availability: 'available', attendance: 94 },
 ];
 
 const ALL_POLLS = [

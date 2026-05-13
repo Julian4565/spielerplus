@@ -29,7 +29,7 @@
     <Card noPadding class="member-card hover-scale">
       <div class="member-visual">
         <div class="member-photo-container">
-          <img src={member.avatar} alt={member.name} class="member-photo" />
+          <img src={member.avatar} alt={member.name} class="member-photo" onerror={(e) => e.currentTarget.src = 'https://img.a.transfermarkt.technology/portrait/header/placeholder.jpg'} />
           <div class="jersey-number">{member.jerseyNumber || '—'}</div>
         </div>
         <div class="availability-indicator {member.availability}" title={member.availability}></div>

@@ -47,7 +47,7 @@
       <div class="attendance-item hover-row">
         <div class="member-col">
           <div class="avatar-wrapper">
-            <img src={member.avatar} alt={member.name} class="attendance-avatar" />
+            <img src={member.avatar} alt={member.name} class="attendance-avatar" onerror={(e) => e.currentTarget.src = 'https://img.a.transfermarkt.technology/portrait/header/placeholder.jpg'} />
             {#if member.jerseyNumber}
               <span class="jersey-sm">{member.jerseyNumber}</span>
             {/if}
