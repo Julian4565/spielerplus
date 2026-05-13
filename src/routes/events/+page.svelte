@@ -44,7 +44,7 @@
 
 <div class="events-grid">
   {#each filteredEvents as event}
-    <Card noPadding class="event-full-card hover-scale" class:ucl-card={event.isUCL}>
+    <Card noPadding class="event-full-card hover-scale {event.isUCL ? 'ucl-card' : ''}">
       <div class="event-header">
         <div class="header-left">
           <div class="event-type-tag {event.type}">{event.type}</div>

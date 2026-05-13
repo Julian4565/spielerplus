@@ -25,7 +25,7 @@
     
     <div class="events-list">
       {#each upcomingEvents as event}
-        <Card noPadding class="event-card hover-scale" class:ucl-card={event.isUCL}>
+        <Card noPadding class="event-card hover-scale {event.isUCL ? 'ucl-card' : ''}">
           <div class="event-date">
             <span class="day">{event.date.split('-')[2]}</span>
             <span class="month">MAY</span>
