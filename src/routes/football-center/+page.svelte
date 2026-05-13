@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { footballData } from '$lib/stores/footballStore.svelte.ts';
+  import { onMount } from 'svelte';
+  import { footballData, refreshFootballData } from '$lib/stores/footballStore.svelte.ts';
   import Card from '$lib/components/ui/Card.svelte';
-  import { Activity, Calendar, Trophy, Clock, MapPin } from 'lucide-svelte';
+  import { Activity, Calendar, Trophy, Clock, MapPin, Info } from 'lucide-svelte';
 
   function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString('en-GB', {
@@ -12,6 +13,14 @@
       minute: '2-digit'
     });
   }
+
+  onMount(() => {
+    if (!footballData.lastUpdated) {
+      refreshFootballData();
+    }
+  });
+
+  let showDiagnostics = $state(false);
 </script>
 
 <div class="football-center-page animate-in">
@@ -19,14 +28,69 @@
     <div class="header-content">
       <h1 class="page-title">Football Center</h1>
       <p class="page-subtitle">Live scores, upcoming fixtures and recent results for FC Bayern</p>
+      
+      {#if footballData.lastUpdated}
+        <div class="last-updated">
+          Last synced: {new Date(footballData.lastUpdated).toLocaleTimeString()}
+        </div>
+      {/if}
     </div>
-    {#if footballData.loading}
-      <div class="loading-badge">
-        <Activity size={16} class="spin" />
-        <span>Updating Live Data...</span>
-      </div>
-    {/if}
+    
+    <div class="header-actions">
+      <button class="diagnostic-btn" onclick={() => showDiagnostics = !showDiagnostics}>
+        <Info size={16} />
+      </button>
+
+      {#if footballData.error}
+        <div class="error-badge">
+          <span>Error loading data: {footballData.error}</span>
+          <button onclick={() => refreshFootballData()} class="retry-btn">Retry</button>
+        </div>
+      {/if}
+      
+      <button 
+        class="refresh-btn" 
+        onclick={() => refreshFootballData()} 
+        disabled={footballData.loading}
+      >
+        <Activity size={16} class={footballData.loading ? 'spin' : ''} />
+        <span>{footballData.loading ? 'Updating...' : 'Refresh Data'}</span>
+      </button>
+    </div>
   </header>
+
+  {#if showDiagnostics}
+    <div class="diagnostics-panel animate-in">
+      <h3>API Diagnostics</h3>
+      <div class="diag-grid">
+        <div class="diag-item">
+          <span class="label">Status:</span>
+          <span class="value" class:text-success={!footballData.error} class:text-error={!!footballData.error}>
+            {footballData.error ? 'Error' : 'Connected'}
+          </span>
+        </div>
+        <div class="diag-item">
+          <span class="label">Fixtures:</span>
+          <span class="value">{footballData.fixtures.length}</span>
+        </div>
+        <div class="diag-item">
+          <span class="label">Results:</span>
+          <span class="value">{footballData.results.length}</span>
+        </div>
+        <div class="diag-item">
+          <span class="label">Standings:</span>
+          <span class="value">
+            BL: {footballData.standings.bundesliga ? 'OK' : 'None'} | 
+            CL: {footballData.standings.cl ? 'OK' : 'None'}
+          </span>
+        </div>
+      </div>
+      <div class="raw-data-preview">
+        <h4>Raw Data Sample (First Fixture):</h4>
+        <pre>{JSON.stringify(footballData.fixtures[0], null, 2) || 'No data'}</pre>
+      </div>
+    </div>
+  {/if}
 
   <div class="center-grid">
     <!-- Live & Upcoming Section -->
@@ -148,7 +212,105 @@
     font-size: 1.1rem;
   }
 
-  .loading-badge {
+  .last-updated {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: 0.25rem;
+  }
+
+  .diagnostic-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: var(--transition);
+  }
+
+  .diagnostic-btn:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .diagnostics-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+  }
+
+  .diagnostics-panel h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-main);
+  }
+
+  .diag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .diag-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: var(--bg-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+  }
+
+  .diag-item .label {
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .diag-item .value {
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .text-success { color: #10b981; }
+  .text-error { color: #ef4444; }
+
+  .raw-data-preview {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .raw-data-preview h4 {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .raw-data-preview pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    overflow-x: auto;
+    max-height: 200px;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .refresh-btn {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -156,9 +318,50 @@
     padding: 0.75rem 1.25rem;
     border-radius: var(--radius-full);
     border: 1px solid var(--border);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--primary);
     box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .refresh-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    background: var(--bg-color);
+  }
+
+  .refresh-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .error-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #fef2f2;
+    color: #991b1b;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-md);
+    border: 1px solid #fee2e2;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .retry-btn {
+    background: #991b1b;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+
+  .retry-btn:hover {
+    background: #7f1d1d;
   }
 
   .spin {

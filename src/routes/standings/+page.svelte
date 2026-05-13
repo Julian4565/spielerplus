@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { footballData } from '$lib/stores/footballStore.svelte.ts';
+  import { footballData, refreshFootballData } from '$lib/stores/footballStore.svelte.ts';
   import Card from '$lib/components/ui/Card.svelte';
-  import { BarChart3, Trophy, ChevronRight } from 'lucide-svelte';
+  import { BarChart3, Trophy, ChevronRight, Activity } from 'lucide-svelte';
 
   const BAYERN_ID = 5;
 
@@ -22,23 +22,41 @@
     <div class="header-content">
       <h1 class="page-title">League Standings</h1>
       <p class="page-subtitle">Current position and performance across competitions</p>
+      
+      {#if footballData.error}
+        <div class="error-inline">
+          <span>{footballData.error}</span>
+          <button onclick={() => refreshFootballData()} class="text-btn">Retry</button>
+        </div>
+      {/if}
     </div>
     
-    <div class="table-switcher">
+    <div class="header-actions">
       <button 
-        class="switch-btn" 
-        class:active={activeTable === 'bundesliga'} 
-        onclick={() => activeTable = 'bundesliga'}
+        class="refresh-icon-btn" 
+        onclick={() => refreshFootballData()} 
+        disabled={footballData.loading}
+        title="Refresh Standings"
       >
-        Bundesliga
+        <Activity size={18} class={footballData.loading ? 'spin' : ''} />
       </button>
-      <button 
-        class="switch-btn" 
-        class:active={activeTable === 'cl'} 
-        onclick={() => activeTable = 'cl'}
-      >
-        Champions League
-      </button>
+
+      <div class="table-switcher">
+        <button 
+          class="switch-btn" 
+          class:active={activeTable === 'bundesliga'} 
+          onclick={() => activeTable = 'bundesliga'}
+        >
+          Bundesliga
+        </button>
+        <button 
+          class="switch-btn" 
+          class:active={activeTable === 'cl'} 
+          onclick={() => activeTable = 'cl'}
+        >
+          Champions League
+        </button>
+      </div>
     </div>
   </header>
 
@@ -118,7 +136,7 @@
   .page-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
     margin-bottom: 2.5rem;
   }
 
@@ -133,6 +151,70 @@
   .page-subtitle {
     color: var(--text-muted);
     font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .error-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #b91c1c;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: #fef2f2;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
+    width: fit-content;
+  }
+
+  .text-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    text-decoration: underline;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .refresh-icon-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: var(--transition);
+  }
+
+  .refresh-icon-btn:hover:not(:disabled) {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: var(--bg-color);
+  }
+
+  .refresh-icon-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .spin {
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 
   .table-switcher {

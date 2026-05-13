@@ -32,10 +32,10 @@
 
 <aside class="sidebar">
   <div class="sidebar-header">
-    <div class="logo interactive-icon" onclick={() => window.location.href = '/'}>
+    <a href="{base}/" class="logo interactive-icon">
       <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg" alt="Bayern Logo" class="logo-img" />
       <span class="logo-text">SpielerPlus</span>
-    </div>
+    </a>
   </div>
 
   <nav class="sidebar-nav">

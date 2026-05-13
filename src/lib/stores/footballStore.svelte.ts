@@ -17,24 +17,39 @@ export const footballData = $state({
 export async function refreshFootballData() {
   if (footballData.loading) return;
   
+  console.log('[FootballStore] Refreshing all football data...');
   footballData.loading = true;
   footballData.error = null;
   
   try {
-    const [fixturesData, resultsData, blStandings, clStandings] = await Promise.all([
+    const results = await Promise.allSettled([
       footballApi.getBayernFixtures(),
       footballApi.getBayernResults(),
       footballApi.getBundesligaStandings(),
       footballApi.getCLStandings()
     ]);
     
-    footballData.fixtures = fixturesData?.matches || [];
-    footballData.results = resultsData?.matches || [];
-    footballData.standings.bundesliga = blStandings;
-    footballData.standings.cl = clStandings;
+    // Process results individually to allow partial success
+    if (results[0].status === 'fulfilled') footballData.fixtures = results[0].value?.matches || [];
+    if (results[1].status === 'fulfilled') footballData.results = results[1].value?.matches || [];
+    if (results[2].status === 'fulfilled') footballData.standings.bundesliga = results[2].value;
+    if (results[3].status === 'fulfilled') footballData.standings.cl = results[3].value;
+    
+    // Check if everything failed
+    if (results.every(r => r.status === 'rejected')) {
+      const error = (results[0] as PromiseRejectedResult).reason;
+      footballData.error = error.message || 'Failed to fetch any data';
+    }
+
     footballData.lastUpdated = Date.now();
+    console.log('[FootballStore] Data refresh complete', {
+      fixtures: footballData.fixtures.length,
+      results: footballData.results.length,
+      hasBL: !!footballData.standings.bundesliga,
+      hasCL: !!footballData.standings.cl
+    });
   } catch (err: any) {
-    console.error('Failed to fetch football data:', err);
+    console.error('[FootballStore] Global error in refresh:', err);
     footballData.error = err.message;
   } finally {
     footballData.loading = false;
