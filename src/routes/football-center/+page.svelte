@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { footballData, refreshFootballData } from '$lib/stores/footballStore.svelte.ts';
   import Card from '$lib/components/ui/Card.svelte';
-  import { Activity, Calendar, Trophy, Clock, MapPin, Info } from 'lucide-svelte';
+  import { Activity, Calendar, Trophy, Clock, MapPin, Info, ChevronRight } from 'lucide-svelte';
 
   function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString('en-GB', {
@@ -156,7 +156,7 @@
       </div>
 
       <div class="results-list">
-        {#each footballData.results as match}
+        {#each footballData.results.slice(0, 5) as match}
           <Card class="result-card">
             <div class="result-teams">
               <div class="res-team">
@@ -180,6 +180,47 @@
             </div>
           </Card>
         {/each}
+      </div>
+
+      <div class="news-section">
+        <div class="section-header mt-8">
+          <Activity size={20} class="section-icon" />
+          <h2>Latest Club News</h2>
+        </div>
+        
+        <Card noPadding class="news-main-card hover-scale">
+          <div class="news-image-container">
+            <img src="/allianz_arena_matchday_1778668623552.png" alt="Allianz Arena" class="news-hero-img" />
+            <div class="news-overlay">
+              <span class="news-tag">Matchday</span>
+            </div>
+          </div>
+          <div class="news-content">
+            <h3>Preparations for the upcoming match at Allianz Arena</h3>
+            <p>The team is in high spirits after the recent training sessions. Fans are expecting a sell-out crowd.</p>
+            <div class="news-footer">
+              <span>2 hours ago</span>
+              <button class="read-more">Read More <ChevronRight size={14}/></button>
+            </div>
+          </div>
+        </Card>
+
+        <div class="mini-news-list">
+          <div class="mini-news-item">
+            <div class="mini-img-box"></div>
+            <div class="mini-content">
+              <h4>Training Report: Focus on tactical awareness</h4>
+              <span>Today • 10:45 AM</span>
+            </div>
+          </div>
+          <div class="mini-news-item">
+            <div class="mini-img-box"></div>
+            <div class="mini-content">
+              <h4>Interview: Captain speaks on title ambitions</h4>
+              <span>Yesterday • 4:20 PM</span>
+            </div>
+          </div>
+        </div>
       </div>
     </aside>
   </div>
@@ -563,6 +604,137 @@
     font-size: 0.75rem;
     color: var(--text-muted);
     text-align: center;
+  }
+
+  /* News Section Styles */
+  .news-section {
+    margin-top: 2rem;
+  }
+
+  .mt-8 { margin-top: 2rem; }
+
+  .news-main-card {
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .news-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .news-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .news-main-card:hover .news-hero-img {
+    transform: scale(1.05);
+  }
+
+  .news-overlay {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .news-tag {
+    background: var(--primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .news-content {
+    padding: 1.5rem;
+  }
+
+  .news-content h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+    color: var(--text-main);
+  }
+
+  .news-content p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
+
+  .news-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .read-more {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .mini-news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .mini-news-item {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+    cursor: pointer;
+  }
+
+  .mini-news-item:hover {
+    border-color: var(--primary);
+    background: var(--bg-color);
+  }
+
+  .mini-img-box {
+    width: 60px;
+    height: 60px;
+    background: var(--bg-color);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+
+  .mini-content h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: var(--text-main);
+    line-height: 1.3;
+  }
+
+  .mini-content span {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 600;
   }
 
   @media (max-width: 1200px) {

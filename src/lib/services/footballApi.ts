@@ -1,8 +1,12 @@
-const API_KEY = import.meta.env.VITE_FOOTBALL_API_KEY || '8e347984230f458d9513410c6fb7f06b';
+const API_KEY = import.meta.env.VITE_FOOTBALL_API_KEY;
 const BASE_URL = 'https://api.football-data.org/v4';
 const BAYERN_ID = 5;
 
-console.log('[FootballAPI] Initialized with key:', API_KEY ? `${API_KEY.slice(0, 4)}...` : 'MISSING');
+if (!API_KEY) {
+  console.error('[FootballAPI] CRITICAL: VITE_FOOTBALL_API_KEY is not defined in .env!');
+} else {
+  console.log('[FootballAPI] Initialized with key:', `${API_KEY.slice(0, 4)}...${API_KEY.slice(-4)}`);
+}
 
 // Simple in-memory cache to avoid rate limits
 const cache = new Map<string, { data: any, timestamp: number }>();
@@ -73,5 +77,9 @@ export const footballApi = {
   
   getCompetitionMatches: async (competitionCode: string) => {
     return fetchWithCache(`/competitions/${competitionCode}/matches?status=SCHEDULED&limit=20`);
+  },
+  
+  getBayernSquad: async () => {
+    return fetchWithCache(`/teams/${BAYERN_ID}`);
   }
 };
