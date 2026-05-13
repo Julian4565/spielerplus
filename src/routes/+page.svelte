@@ -3,10 +3,23 @@
   import Button from '$lib/components/ui/Button.svelte';
   import ProgressBar from '$lib/components/ui/ProgressBar.svelte';
   import { events, teamMembers, polls, appState } from '$lib/stores/mockData.svelte';
-  import { Calendar, Cake, Megaphone, CheckCircle2 } from 'lucide-svelte';
+  import { footballData } from '$lib/stores/footballStore.svelte.ts';
+  import { Calendar, Cake, Megaphone, CheckCircle2, MapPin } from 'lucide-svelte';
 
-  let upcomingEvents = $derived(events.filter(e => e.status === 'upcoming').slice(0, 3));
+  let upcomingEvents = $derived(footballData.fixtures.slice(0, 3));
   let birthdays = $derived(teamMembers.slice(0, 2)); // Mock birthdays
+
+  function getMonth(dateStr: string) {
+    return new Date(dateStr).toLocaleString('en-US', { month: 'short' }).toUpperCase();
+  }
+
+  function getDay(dateStr: string) {
+    return new Date(dateStr).getDate();
+  }
+
+  function formatTime(dateStr: string) {
+    return new Date(dateStr).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
 </script>
 
 <div class="dashboard-grid">
@@ -25,28 +38,33 @@
     
     <div class="events-list">
       {#each upcomingEvents as event}
-        <Card noPadding class="event-card hover-scale {event.isUCL ? 'ucl-card' : ''}">
+        <Card noPadding class="event-card hover-scale">
           <div class="event-date">
-            <span class="day">{event.date.split('-')[2]}</span>
-            <span class="month">MAY</span>
+            <span class="day">{getDay(event.utcDate)}</span>
+            <span class="month">{getMonth(event.utcDate)}</span>
           </div>
           <div class="event-details">
             <div class="event-meta">
-              {#if event.opponentLogo}
-                <img src={event.opponentLogo} alt="Opponent" class="opponent-mini-logo" />
-              {/if}
-              <span class="competition-badge">{event.competition || 'Event'}</span>
+              <img src={event.competition.emblem} alt="" class="comp-mini-logo" />
+              <span class="competition-badge">{event.competition.name}</span>
             </div>
-            <h4>{event.title}</h4>
-            <p>{event.startTime} - {event.endTime} | {event.location}</p>
+            <div class="fixture-teams">
+              <img src={event.homeTeam.crest} alt="" class="opponent-mini-logo" />
+              <h4>{event.homeTeam.shortName || event.homeTeam.name} vs {event.awayTeam.shortName || event.awayTeam.name}</h4>
+              <img src={event.awayTeam.crest} alt="" class="opponent-mini-logo" />
+            </div>
+            <p>{formatTime(event.utcDate)} | {event.venue || 'TBA'}</p>
           </div>
           <div class="event-action">
-            <Button variant={event.userResponse === 'yes' ? 'primary' : 'outline'} size="sm" class="rounded-btn">
-              {event.userResponse === 'yes' ? 'Accepted' : 'Accept'}
-            </Button>
+            <div class="match-status-badge">Scheduled</div>
           </div>
         </Card>
       {/each}
+      {#if upcomingEvents.length === 0 && !footballData.loading}
+        <div class="empty-events">
+          <p>No upcoming fixtures found.</p>
+        </div>
+      {/if}
     </div>
 
     <!-- Polls -->
@@ -259,25 +277,44 @@
     object-fit: contain;
   }
 
-  .competition-badge {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .comp-mini-logo {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
   }
 
-  .event-details h4 {
-    margin: 0 0 0.5rem 0;
+  .fixture-teams {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .fixture-teams h4 {
+    margin: 0;
     font-size: 1.125rem;
     font-weight: 700;
   }
 
-  .event-details p {
-    margin: 0;
-    font-size: 0.875rem;
+  .match-status-badge {
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--primary);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .empty-events {
+    padding: 3rem;
+    text-align: center;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
     color: var(--text-muted);
-    font-weight: 500;
+    border: 2px dashed var(--border);
   }
 
   .event-action {

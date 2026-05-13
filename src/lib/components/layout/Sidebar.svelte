@@ -7,7 +7,9 @@
     Car, 
     Wallet, 
     Settings,
-    Trophy
+    Trophy,
+    Activity,
+    BarChart3
   } from 'lucide-svelte';
   import { page } from '$app/stores';
   import { base } from '$app/paths';
@@ -16,6 +18,8 @@
 
   const navItems = [
     { name: 'Home', href: `${base}/`, icon: Home },
+    { name: 'Football Center', href: `${base}/football-center`, icon: Activity },
+    { name: 'Standings', href: `${base}/standings`, icon: BarChart3 },
     { name: 'Events', href: `${base}/events`, icon: Trophy },
     { name: 'Calendar', href: `${base}/calendar`, icon: Calendar },
     { name: 'Team', href: `${base}/team`, icon: Users },

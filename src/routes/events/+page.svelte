@@ -2,18 +2,55 @@
   import Card from '$lib/components/ui/Card.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { events } from '$lib/stores/mockData.svelte';
+  import { footballData } from '$lib/stores/footballStore.svelte.ts';
   import { MapPin, Clock, Users, Check, X, HelpCircle } from 'lucide-svelte';
 
   let activeTab = $state('upcoming'); // upcoming, past
   
+  let allEvents = $derived(() => {
+    const realFixtures = footballData.fixtures.map(f => ({
+      id: f.id,
+      title: `${f.homeTeam.shortName} vs ${f.awayTeam.shortName}`,
+      date: f.utcDate.split('T')[0],
+      startTime: new Date(f.utcDate).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+      endTime: '',
+      location: f.venue || 'TBA',
+      type: 'match',
+      status: 'upcoming',
+      competition: f.competition.name,
+      opponentLogo: f.homeTeam.id === 5 ? f.awayTeam.crest : f.homeTeam.crest,
+      isUCL: f.competition.code === 'CL',
+      userResponse: 'pending',
+      responses: { yes: 22, no: 2, pending: 4 }
+    }));
+
+    const results = footballData.results.map(f => ({
+      id: f.id,
+      title: `${f.homeTeam.shortName} ${f.score.fullTime.home}-${f.score.fullTime.away} ${f.awayTeam.shortName}`,
+      date: f.utcDate.split('T')[0],
+      startTime: 'Full Time',
+      endTime: '',
+      location: f.venue || 'Match Result',
+      type: 'match',
+      status: 'past',
+      competition: f.competition.name,
+      opponentLogo: f.homeTeam.id === 5 ? f.awayTeam.crest : f.homeTeam.crest,
+      isUCL: f.competition.code === 'CL',
+      userResponse: 'yes',
+      responses: { yes: 28, no: 0, pending: 0 }
+    }));
+
+    return [...events, ...realFixtures, ...results];
+  });
+
   let filteredEvents = $derived(
-    events.filter(e => 
+    allEvents().filter(e => 
       activeTab === 'upcoming' ? e.status === 'upcoming' : e.status === 'past'
-    )
+    ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   );
 
   function respond(eventId: string, response: string) {
-    const event = events.find(e => e.id === eventId);
+    const event = allEvents().find(e => e.id === eventId);
     if (event) {
       event.userResponse = response;
     }

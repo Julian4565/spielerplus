@@ -3,8 +3,9 @@
   import { ChevronLeft, ChevronRight } from 'lucide-svelte';
   import dayjs from 'dayjs';
   import { events } from '$lib/stores/mockData.svelte';
+  import { footballData } from '$lib/stores/footballStore.svelte.ts';
 
-  let currentDate = $state(dayjs('2026-05-01')); // Mocking May 2026 for data
+  let currentDate = $state(dayjs());
 
   function nextMonth() {
     currentDate = currentDate.add(1, 'month');
@@ -35,7 +36,20 @@
   function getEventsForDay(day: number | null) {
     if (!day) return [];
     const dateStr = currentDate.date(day).format('YYYY-MM-DD');
-    return events.filter(e => e.date === dateStr);
+    
+    // Combine mock events (training, etc.) with real fixtures
+    const mockEvents = events.filter(e => e.date === dateStr);
+    const realFixtures = footballData.fixtures
+      .filter(f => f.utcDate.startsWith(dateStr))
+      .map(f => ({
+        id: f.id,
+        title: `${f.homeTeam.shortName} vs ${f.awayTeam.shortName}`,
+        type: 'match',
+        competition: f.competition.name,
+        isUCL: f.competition.code === 'CL'
+      }));
+      
+    return [...mockEvents, ...realFixtures];
   }
 </script>
 
