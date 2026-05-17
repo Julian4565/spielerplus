@@ -7,8 +7,11 @@
 
   let searchQuery = $state('');
   
-  // Map API names to local filenames
-  function getPlayerImage(name: string) {
+  // The mapping is now handled inside allMembers directly
+
+  // Combine real squad with mock data to enrich it (avatars, etc)
+  let allMembers = $derived(() => {
+    // Only use local player images. Reject fallback or missing.
     const fileMap: Record<string, string> = {
       'Aleksandar Pavlović': 'Aleksander Pavlovic .png',
       'Alphonso Davies': 'Alphonso Davies .png',
@@ -28,32 +31,23 @@
       'Tom Bischof': 'Tom Bischof .png'
     };
 
-    if (fileMap[name]) {
-      return `/images/players/${encodeURIComponent(fileMap[name])}`;
-    }
+    let squad = footballData.squad.length > 0 ? footballData.squad : teamMembers;
     
-    // Attempt generic matching for fallback if added later
-    return `/images/players/${encodeURIComponent(name)}.png`;
-  }
-
-  // Combine real squad with mock data to enrich it (avatars, etc)
-  let allMembers = $derived(() => {
-    if (footballData.squad.length === 0) return teamMembers;
-    
-    return footballData.squad.map((player: any) => {
-      // Find matching mock member for avatar/availability
-      const mock = teamMembers.find(m => m.name === player.name);
-      return {
-        id: player.id.toString(),
-        name: player.name,
-        role: player.position === 'Coach' ? 'Staff' : 'Player',
-        position: player.position,
-        avatar: getPlayerImage(player.name),
-        availability: mock?.availability || 'available',
-        jerseyNumber: mock?.jerseyNumber || (player.id % 99),
-        birthdate: player.dateOfBirth || '1990-01-01'
-      };
-    });
+    return squad
+      .filter((player: any) => fileMap[player.name] !== undefined)
+      .map((player: any) => {
+        const mock = teamMembers.find(m => m.name === player.name);
+        return {
+          id: player.id?.toString() || mock?.id,
+          name: player.name,
+          role: player.position === 'Coach' ? 'Staff' : 'Player',
+          position: player.position,
+          avatar: `/images/players/${encodeURIComponent(fileMap[player.name])}`,
+          availability: mock?.availability || 'available',
+          jerseyNumber: mock?.jerseyNumber || player.shirtNumber || (player.id % 99),
+          birthdate: player.dateOfBirth || '1990-01-01'
+        };
+      });
   });
 
   let filteredMembers = $derived(

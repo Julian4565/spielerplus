@@ -7,7 +7,44 @@
 
   let activeTab = $state('upcoming'); // upcoming, past
   
+  const fileMap: Record<string, string> = {
+    'Aleksandar Pavlović': 'Aleksander Pavlovic .png',
+    'Alphonso Davies': 'Alphonso Davies .png',
+    'Dayot Upamecano': 'Dayot Upamecano.png',
+    'Harry Kane': 'Harry Kane .png',
+    'Jamal Musiala': 'Jamal Musiala .png',
+    'Jonas Urbig': 'Jonas Urbig .png',
+    'Jonathan Tah': 'Jonathan Tah .png',
+    'Joshua Kimmich': 'Joshua Kimmich .png',
+    'Josip Stanišić': 'Josip Stanisic.png',
+    'Konrad Laimer': 'Konrad Laimer .png',
+    'Leon Goretzka': 'Leon Goretzka .png',
+    'Luis Díaz': 'Luis Diaz.png',
+    'Manuel Neuer': 'Manuel Neuer .png',
+    'Michael Olise': 'Michael Olise .png',
+    'Serge Gnabry': 'Serge Gnabry.png',
+    'Tom Bischof': 'Tom Bischof .png'
+  };
+
+  function getLocalPlayers() {
+    let squad = footballData.squad.length > 0 ? footballData.squad : events.flatMap(e => []); // Fallback
+    // Only use players that actually have a local image mapped
+    return squad
+      .filter((p: any) => fileMap[p.name] !== undefined)
+      .map((p: any) => ({
+        name: p.name,
+        avatar: `/images/players/${encodeURIComponent(fileMap[p.name])}`
+      }));
+  }
+
   let allEvents = $derived(() => {
+    const localPlayers = getLocalPlayers();
+    
+    // Create consistent mocked attendance using the strictly available local players
+    const yesPlayers = localPlayers.slice(0, Math.floor(localPlayers.length * 0.7));
+    const noPlayers = localPlayers.slice(Math.floor(localPlayers.length * 0.7), Math.floor(localPlayers.length * 0.85));
+    const pendingPlayers = localPlayers.slice(Math.floor(localPlayers.length * 0.85));
+
     const realFixtures = footballData.fixtures.map(f => ({
       id: f.id,
       title: `${f.homeTeam.shortName} vs ${f.awayTeam.shortName}`,
@@ -21,7 +58,10 @@
       opponentLogo: f.homeTeam.id === 5 ? f.awayTeam.crest : f.homeTeam.crest,
       isUCL: f.competition.code === 'CL',
       userResponse: 'pending',
-      responses: { yes: 22, no: 2, pending: 4 }
+      responses: { yes: yesPlayers.length, no: noPlayers.length, pending: pendingPlayers.length },
+      attending: yesPlayers,
+      declined: noPlayers,
+      pending: pendingPlayers
     }));
 
     const results = footballData.results.map(f => ({
@@ -37,10 +77,21 @@
       opponentLogo: f.homeTeam.id === 5 ? f.awayTeam.crest : f.homeTeam.crest,
       isUCL: f.competition.code === 'CL',
       userResponse: 'yes',
-      responses: { yes: 28, no: 0, pending: 0 }
+      responses: { yes: localPlayers.length, no: 0, pending: 0 },
+      attending: localPlayers,
+      declined: [],
+      pending: []
     }));
 
-    return [...events, ...realFixtures, ...results];
+    // For mock events (trainings, tactical, recovery)
+    const enrichedMockEvents = events.map(e => ({
+      ...e,
+      attending: yesPlayers,
+      declined: noPlayers,
+      pending: pendingPlayers
+    }));
+
+    return [...enrichedMockEvents, ...realFixtures, ...results];
   });
 
   let filteredEvents = $derived(
@@ -117,13 +168,46 @@
         </div>
 
         <div class="participation-summary">
-          <div class="participation-bar">
-            <div class="bar-segment yes" style="width: {(event.responses.yes / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
-            <div class="bar-segment no" style="width: {(event.responses.no / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
-          </div>
           <div class="stats-labels">
             <div class="stat"><span class="dot yes"></span> {event.responses.yes} Accepted</div>
             <div class="stat"><span class="dot no"></span> {event.responses.no} Declined</div>
+            <div class="stat"><span class="dot pending"></span> {event.responses.pending} Pending</div>
+          </div>
+          
+          <div class="participation-bar">
+            <div class="bar-segment yes" style="width: {(event.responses.yes / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
+            <div class="bar-segment no" style="width: {(event.responses.no / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
+            <div class="bar-segment pending" style="width: {(event.responses.pending / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
+          </div>
+
+          <div class="attendance-avatars-section">
+            {#if event.attending && event.attending.length > 0}
+              <div class="avatar-group-container">
+                <div class="avatar-group-label text-success">Attending ({event.attending.length})</div>
+                <div class="avatar-group">
+                  {#each event.attending.slice(0, 5) as player}
+                    <img src={player.avatar} alt={player.name} title={player.name} class="attendance-avatar border-success" />
+                  {/each}
+                  {#if event.attending.length > 5}
+                    <div class="attendance-avatar more-avatar">+{event.attending.length - 5}</div>
+                  {/if}
+                </div>
+              </div>
+            {/if}
+
+            {#if event.declined && event.declined.length > 0}
+              <div class="avatar-group-container">
+                <div class="avatar-group-label text-danger">Unavailable ({event.declined.length})</div>
+                <div class="avatar-group">
+                  {#each event.declined.slice(0, 5) as player}
+                    <img src={player.avatar} alt={player.name} title={player.name} class="attendance-avatar border-danger" />
+                  {/each}
+                  {#if event.declined.length > 5}
+                    <div class="attendance-avatar more-avatar">+{event.declined.length - 5}</div>
+                  {/if}
+                </div>
+              </div>
+            {/if}
           </div>
         </div>
       </div>
@@ -335,10 +419,12 @@
   .bar-segment { height: 100%; }
   .bar-segment.yes { background: var(--success); }
   .bar-segment.no { background: var(--primary); }
+  .bar-segment.pending { background: #e2e8f0; }
 
   .stats-labels {
     display: flex;
     gap: 1.25rem;
+    margin-bottom: 0.75rem;
   }
 
   .stat {
@@ -353,6 +439,70 @@
   .dot { width: 8px; height: 8px; border-radius: 50%; }
   .dot.yes { background: var(--success); }
   .dot.no { background: var(--primary); }
+  .dot.pending { background: #cbd5e1; }
+
+  .attendance-avatars-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border);
+  }
+
+  .avatar-group-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .avatar-group-label {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .text-success { color: var(--success); }
+  .text-danger { color: var(--danger); }
+
+  .avatar-group {
+    display: flex;
+    align-items: center;
+    padding-left: 0.5rem;
+  }
+
+  .attendance-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+    border: 2px solid white;
+    margin-left: -0.5rem;
+    background: white;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+  }
+
+  .attendance-avatar:hover {
+    transform: translateY(-4px) scale(1.1);
+    z-index: 10;
+  }
+
+  .border-success { border-color: var(--success); }
+  .border-danger { border-color: var(--danger); }
+
+  .more-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 800;
+    border-color: white;
+  }
 
   .event-footer {
     padding: 1.5rem;
