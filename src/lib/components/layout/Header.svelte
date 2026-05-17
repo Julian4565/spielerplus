@@ -6,9 +6,16 @@
   import { page } from '$app/stores';
 
   let showTeamDropdown = $state(false);
+  let showNotifs = $state(false);
 
   function toggleDropdown() {
     showTeamDropdown = !showTeamDropdown;
+    if (showNotifs) showNotifs = false;
+  }
+  
+  function toggleNotifs() {
+    showNotifs = !showNotifs;
+    if (showTeamDropdown) showTeamDropdown = false;
   }
 
   function selectTeam(id: string) {
@@ -73,10 +80,44 @@
       {/if}
     </div>
 
-    <button class="interactive-icon notification-btn" onclick={() => alert('Notifications coming soon!')}>
-      <Bell size={20} />
-      <span class="badge">3</span>
-    </button>
+    <div style="position: relative;">
+      <button class="interactive-icon notification-btn" onclick={toggleNotifs}>
+        <Bell size={20} />
+        <span class="badge">3</span>
+      </button>
+      
+      {#if showNotifs}
+        <div class="notif-dropdown">
+          <div class="notif-header">
+            <h4>Notifications</h4>
+            <button class="mark-read">Mark all as read</button>
+          </div>
+          <div class="notif-list">
+            <div class="notif-item unread">
+              <div class="notif-dot"></div>
+              <div class="notif-content">
+                <p><strong>Training schedule</strong> updated for tomorrow.</p>
+                <span>10m ago</span>
+              </div>
+            </div>
+            <div class="notif-item unread">
+              <div class="notif-dot"></div>
+              <div class="notif-content">
+                <p><strong>Harry Kane</strong> accepted the match invitation.</p>
+                <span>1h ago</span>
+              </div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-content">
+                <p>Sponsorship payment of <strong>€12.5M</strong> received.</p>
+                <span>2h ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      {/if}
+    </div>
+    
     <div class="user-profile interactive-icon" onclick={() => alert('Profile settings coming soon!')}>
       <Avatar src={userProfile.avatar} alt={userProfile.name} size="sm" />
     </div>
@@ -222,6 +263,95 @@
     justify-content: center;
     padding: 0 4px;
     border: 2px solid var(--surface);
+  }
+
+  .notif-dropdown {
+    position: absolute;
+    top: 130%;
+    right: -20px;
+    width: 320px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 100;
+  }
+
+  .notif-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-color);
+  }
+
+  .notif-header h4 {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+
+  .mark-read {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .notif-list {
+    display: flex;
+    flex-direction: column;
+    max-height: 350px;
+    overflow-y: auto;
+  }
+
+  .notif-item {
+    display: flex;
+    padding: 1rem;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--border);
+    transition: var(--transition);
+  }
+
+  .notif-item:last-child { border-bottom: none; }
+  .notif-item:hover { background: var(--bg-color); }
+  .notif-item.unread { background: rgba(220, 38, 38, 0.03); }
+
+  .notif-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    margin-top: 0.35rem;
+    flex-shrink: 0;
+    opacity: 0;
+  }
+
+  .notif-item.unread .notif-dot { opacity: 1; }
+
+  .notif-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .notif-content p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--text-main);
+  }
+
+  .notif-content span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
   }
 
   .user-profile {

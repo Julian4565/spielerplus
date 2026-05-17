@@ -29,50 +29,52 @@
 
 <div class="team-grid">
   {#each filteredMembers as member}
-    <Card noPadding class="member-card hover-scale">
-      <div class="member-visual">
-        <div class="member-photo-container">
-          <img 
-            src={member.avatar} 
-            alt={member.name} 
-            class="member-photo" 
-            loading="eager"
-            onerror={(e) => { 
-              const target = e.currentTarget as HTMLImageElement;
-              const placeholder = '/images/players/placeholder.svg';
-              if (target.src !== window.location.origin + placeholder && !target.src.endsWith(placeholder)) {
-                target.src = placeholder;
-              }
-            }} 
-          />
-          <div class="jersey-number">{member.jerseyNumber || '—'}</div>
+    <a href="/team/{member.id}" class="member-card-link" style="text-decoration: none; color: inherit; display: block;">
+      <Card noPadding class="member-card hover-scale">
+        <div class="member-visual">
+          <div class="member-photo-container">
+            <img 
+              src={member.avatar} 
+              alt={member.name} 
+              class="member-photo" 
+              loading="eager"
+              onerror={(e) => { 
+                const target = e.currentTarget as HTMLImageElement;
+                const placeholder = '/images/players/placeholder.svg';
+                if (target.src !== window.location.origin + placeholder && !target.src.endsWith(placeholder)) {
+                  target.src = placeholder;
+                }
+              }} 
+            />
+            <div class="jersey-number">{member.jerseyNumber || '—'}</div>
+          </div>
+          <div class="availability-indicator {member.availability}" title={member.availability}></div>
         </div>
-        <div class="availability-indicator {member.availability}" title={member.availability}></div>
-      </div>
-      
-      <div class="member-info">
-        <div class="role-tag">{member.role}</div>
-        <h3>{member.name}</h3>
-        <p class="position">{member.position}</p>
         
-        <div class="member-stats">
-          <div class="stat">
-            <span class="label">AGE</span>
-            <span class="value">{new Date().getFullYear() - new Date(member.birthdate).getFullYear()}</span>
-          </div>
-          <div class="stat">
-            <span class="label">CONTRACT</span>
-            <span class="value">2027</span>
+        <div class="member-info">
+          <div class="role-tag">{member.role}</div>
+          <h3>{member.name}</h3>
+          <p class="position">{member.position}</p>
+          
+          <div class="member-stats">
+            <div class="stat">
+              <span class="label">AGE</span>
+              <span class="value">{new Date().getFullYear() - new Date(member.birthdate).getFullYear()}</span>
+            </div>
+            <div class="stat">
+              <span class="label">CONTRACT</span>
+              <span class="value">2027</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="member-footer">
-        <button class="interactive-icon contact-btn" title="Call"><Phone size={18} /></button>
-        <button class="interactive-icon contact-btn" title="Email"><Mail size={18} /></button>
-        <Button variant="outline" size="sm" class="flex-1 rounded-btn">Profile</Button>
-      </div>
-    </Card>
+        <div class="member-footer">
+          <button class="interactive-icon contact-btn" title="Call" onclick={(e) => { e.preventDefault(); e.stopPropagation(); }}><Phone size={18} /></button>
+          <button class="interactive-icon contact-btn" title="Email" onclick={(e) => { e.preventDefault(); e.stopPropagation(); }}><Mail size={18} /></button>
+          <Button variant="outline" size="sm" class="flex-1 rounded-btn" onclick={(e: any) => { e.preventDefault(); e.stopPropagation(); }}>Profile</Button>
+        </div>
+      </Card>
+    </a>
   {/each}
 </div>
 

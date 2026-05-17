@@ -104,108 +104,111 @@
 
 <div class="events-grid">
   {#each filteredEvents as event}
-    <Card noPadding class="event-full-card hover-scale {event.isUCL ? 'ucl-card' : ''}">
-      <div class="event-header">
-        <div class="header-left">
-          <div class="event-type-tag {event.type}">{event.type}</div>
-          {#if event.competition}
-            <span class="comp-badge">{event.competition}</span>
-          {/if}
-        </div>
-        <div class="event-date-chip">
-          {new Date(event.date).toLocaleDateString('en-US', { day: 'numeric', month: 'SHORT' })}
-        </div>
-      </div>
-      
-      <div class="event-body">
-        {#if event.opponentLogo}
-          <div class="opponent-visual">
-            <img src={event.opponentLogo} alt="Opponent" class="opp-logo" />
-            <span class="vs">VS</span>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg" alt="Bayern" class="opp-logo" />
+    <a href="/events/{event.id}" style="text-decoration: none; color: inherit; display: block;">
+      <Card noPadding class="event-full-card hover-scale {event.isUCL ? 'ucl-card' : ''}">
+        <div class="event-header">
+          <div class="header-left">
+            <div class="event-type-tag {event.type}">{event.type}</div>
+            {#if event.competition}
+              <span class="comp-badge">{event.competition}</span>
+            {/if}
           </div>
-        {/if}
-        <h3>{event.title}</h3>
+          <div class="event-date-chip">
+            {new Date(event.date).toLocaleDateString('en-US', { day: 'numeric', month: 'SHORT' })}
+          </div>
+        </div>
         
-        <div class="info-rows">
-          <div class="info-row">
-            <div class="icon-box"><Clock size={16} /></div>
-            <span>{event.startTime} - {event.endTime}</span>
-          </div>
+        <div class="event-body">
+          {#if event.opponentLogo}
+            <div class="opponent-visual">
+              <img src={event.opponentLogo} alt="Opponent" class="opp-logo" />
+              <span class="vs">VS</span>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg" alt="Bayern" class="opp-logo" />
+            </div>
+          {/if}
           
-          <div class="info-row">
-            <div class="icon-box"><MapPin size={16} /></div>
-            <span>{event.location}</span>
-          </div>
-        </div>
-
-        <div class="participation-summary">
-          <div class="stats-labels">
-            <div class="stat"><span class="dot yes"></span> {event.responses.yes} Accepted</div>
-            <div class="stat"><span class="dot no"></span> {event.responses.no} Declined</div>
-            <div class="stat"><span class="dot pending"></span> {event.responses.pending} Pending</div>
-          </div>
+          <h3>{event.title}</h3>
           
-          <div class="participation-bar">
-            <div class="bar-segment yes" style="width: {(event.responses.yes / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
-            <div class="bar-segment no" style="width: {(event.responses.no / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
-            <div class="bar-segment pending" style="width: {(event.responses.pending / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
+          <div class="info-rows">
+            <div class="info-row">
+              <div class="icon-box"><Clock size={16} /></div>
+              <span>{event.startTime} - {event.endTime}</span>
+            </div>
+            
+            <div class="info-row">
+              <div class="icon-box"><MapPin size={16} /></div>
+              <span>{event.location}</span>
+            </div>
           </div>
 
-          <div class="attendance-avatars-section">
-            {#if event.attending && event.attending.length > 0}
-              <div class="avatar-group-container">
-                <div class="avatar-group-label text-success">Attending ({event.attending.length})</div>
-                <div class="avatar-group">
-                  {#each event.attending.slice(0, 5) as player}
-                    <img src={player.avatar} alt={player.name} title={player.name} class="attendance-avatar border-success" />
-                  {/each}
-                  {#if event.attending.length > 5}
-                    <div class="attendance-avatar more-avatar">+{event.attending.length - 5}</div>
-                  {/if}
-                </div>
-              </div>
-            {/if}
+          <div class="participation-summary">
+            <div class="stats-labels">
+              <div class="stat"><span class="dot yes"></span> {event.responses.yes} Accepted</div>
+              <div class="stat"><span class="dot no"></span> {event.responses.no} Declined</div>
+              <div class="stat"><span class="dot pending"></span> {event.responses.pending} Pending</div>
+            </div>
+            
+            <div class="participation-bar">
+              <div class="bar-segment yes" style="width: {(event.responses.yes / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
+              <div class="bar-segment no" style="width: {(event.responses.no / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
+              <div class="bar-segment pending" style="width: {(event.responses.pending / (event.responses.yes + event.responses.no + event.responses.pending)) * 100}%"></div>
+            </div>
 
-            {#if event.declined && event.declined.length > 0}
-              <div class="avatar-group-container">
-                <div class="avatar-group-label text-danger">Unavailable ({event.declined.length})</div>
-                <div class="avatar-group">
-                  {#each event.declined.slice(0, 5) as player}
-                    <img src={player.avatar} alt={player.name} title={player.name} class="attendance-avatar border-danger" />
-                  {/each}
-                  {#if event.declined.length > 5}
-                    <div class="attendance-avatar more-avatar">+{event.declined.length - 5}</div>
-                  {/if}
+            <div class="attendance-avatars-section">
+              {#if event.attending && event.attending.length > 0}
+                <div class="avatar-group-container">
+                  <div class="avatar-group-label text-success">Attending ({event.attending.length})</div>
+                  <div class="avatar-group">
+                    {#each event.attending.slice(0, 5) as player}
+                      <img src={player.avatar} alt={player.name} title={player.name} class="attendance-avatar border-success" />
+                    {/each}
+                    {#if event.attending.length > 5}
+                      <div class="attendance-avatar more-avatar">+{event.attending.length - 5}</div>
+                    {/if}
+                  </div>
                 </div>
-              </div>
-            {/if}
+              {/if}
+
+              {#if event.declined && event.declined.length > 0}
+                <div class="avatar-group-container">
+                  <div class="avatar-group-label text-danger">Unavailable ({event.declined.length})</div>
+                  <div class="avatar-group">
+                    {#each event.declined.slice(0, 5) as player}
+                      <img src={player.avatar} alt={player.name} title={player.name} class="attendance-avatar border-danger" />
+                    {/each}
+                    {#if event.declined.length > 5}
+                      <div class="attendance-avatar more-avatar">+{event.declined.length - 5}</div>
+                    {/if}
+                  </div>
+                </div>
+              {/if}
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div class="event-footer">
-        <div class="response-section">
-          <span class="response-title">Confirm Participation</span>
-          <div class="response-actions">
-            <Button 
-              variant={event.userResponse === 'yes' ? 'primary' : 'outline'} 
-              class="flex-1 rounded-btn"
-              onclick={() => respond(event.id, 'yes')}
-            >
-              <Check size={16} class="mr-2" /> Accept
-            </Button>
-            <Button 
-              variant={event.userResponse === 'no' ? 'danger' : 'outline'} 
-              class="flex-1 rounded-btn"
-              onclick={() => respond(event.id, 'no')}
-            >
-              <X size={16} class="mr-2" /> Decline
-            </Button>
+        
+        <div class="event-footer">
+          <div class="response-section">
+            <span class="response-title">Confirm Participation</span>
+            <div class="response-actions">
+              <Button 
+                variant={event.userResponse === 'yes' ? 'primary' : 'outline'} 
+                class="flex-1 rounded-btn"
+                onclick={(e: any) => { e.preventDefault(); e.stopPropagation(); respond(event.id, 'yes'); }}
+              >
+                <Check size={16} class="mr-2" /> Accept
+              </Button>
+              <Button 
+                variant={event.userResponse === 'no' ? 'danger' : 'outline'} 
+                class="flex-1 rounded-btn"
+                onclick={(e: any) => { e.preventDefault(); e.stopPropagation(); respond(event.id, 'no'); }}
+              >
+                <X size={16} class="mr-2" /> Decline
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </a>
   {/each}
 </div>
 

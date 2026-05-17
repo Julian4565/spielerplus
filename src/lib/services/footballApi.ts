@@ -1,9 +1,10 @@
-const API_KEY = import.meta.env.VITE_FOOTBALL_API_KEY;
-const BASE_URL = 'https://api.football-data.org/v4';
+// Use env variable or fallback to the provided Native Stats API key
+const API_KEY = import.meta.env.VITE_FOOTBALL_API_KEY || '8e347984230f458d9513410c6fb7f06b';
+const BASE_URL = 'https://native-stats.org/v4';
 const BAYERN_ID = 5;
 
 if (!API_KEY) {
-  console.error('[FootballAPI] CRITICAL: VITE_FOOTBALL_API_KEY is not defined in .env!');
+  console.error('[FootballAPI] CRITICAL: API_KEY is not defined!');
 } else {
   console.log('[FootballAPI] Initialized with key:', `${API_KEY.slice(0, 4)}...${API_KEY.slice(-4)}`);
 }

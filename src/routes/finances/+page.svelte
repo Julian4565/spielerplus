@@ -246,25 +246,25 @@
   }
 
   .tx-details .desc {
-    font-weight: 700;
-    font-size: 1rem;
+    font-weight: 800;
+    font-size: 1.125rem;
     color: var(--text-main);
   }
 
   .tx-details .date {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     color: var(--text-muted);
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .tx-amount {
-    font-weight: 800;
-    font-size: 1.25rem;
-    letter-spacing: -0.01em;
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
   }
 
-  .tx-amount.income { color: #16a34a; }
-  .tx-amount.expense { color: var(--text-main); }
+  .tx-amount.income { color: var(--success); }
+  .tx-amount.expense { color: var(--danger); }
 
   :global(.mt-8) { margin-top: 2rem; }
   :global(.mt-6) { margin-top: 1.5rem; }
