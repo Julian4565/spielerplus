@@ -4,8 +4,8 @@
   import { events } from '$lib/stores/mockData.svelte';
   import { footballData } from '$lib/stores/footballStore.svelte.ts';
   import { MapPin, Clock, Users, Check, X, HelpCircle } from 'lucide-svelte';
-
   import { getLocalBayernSquad } from '$lib/stores/footballStore.svelte.ts';
+  import { base } from '$app/paths';
 
   let activeTab = $state('upcoming'); // upcoming, past
 
@@ -104,7 +104,7 @@
 
 <div class="events-grid">
   {#each filteredEvents as event}
-    <a href="/events/{event.id}" style="text-decoration: none; color: inherit; display: block;">
+    <a href="{base}/events/{event.id}" style="text-decoration: none; color: inherit; display: block;">
       <Card noPadding class="event-full-card hover-scale {event.isUCL ? 'ucl-card' : ''}">
         <div class="event-header">
           <div class="header-left">

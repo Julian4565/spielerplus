@@ -4,8 +4,9 @@
   import ProgressBar from '$lib/components/ui/ProgressBar.svelte';
   import { events, teamMembers, polls, appState } from '$lib/stores/mockData.svelte';
   import { footballData } from '$lib/stores/footballStore.svelte.ts';
-  import { Calendar, Cake, Megaphone, CheckCircle2, MapPin } from 'lucide-svelte';
+  import { Calendar, Cake, Megaphone, CheckCircle2, MapPin, ShoppingBag, CreditCard } from 'lucide-svelte';
   import { getLocalBayernSquad } from '$lib/stores/footballStore.svelte.ts';
+  import { base } from '$app/paths';
 
   let upcomingEvents = $derived(footballData.fixtures.slice(0, 3));
 
@@ -23,6 +24,67 @@
 
   function formatTime(dateStr: string) {
     return new Date(dateStr).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // Fan Shop Premium products
+  const shopProducts = [
+    {
+      id: 1,
+      name: "FC Bayern Home Kit 2026/27",
+      price: 99.95,
+      image: `${base}/images/Titels/Fan Shop.png`,
+      category: "Matchwear"
+    },
+    {
+      id: 2,
+      name: "UCL Premium Track-Jacket",
+      price: 89.95,
+      image: `${base}/images/Titels/Fan shop 2.png`,
+      category: "Training"
+    },
+    {
+      id: 3,
+      name: "Elite Training Performance Sweater",
+      price: 74.95,
+      image: `${base}/images/Titels/Fan shop 4 .png`, // note the trailing space
+      category: "Training"
+    },
+    {
+      id: 4,
+      name: "Classic Curved-Brim Cap",
+      price: 29.95,
+      image: `${base}/images/Titels/Fan shop 5 .png`, // note the trailing space
+      category: "Accessories"
+    },
+    {
+      id: 5,
+      name: "Squad Travel Hooded Winter Parka",
+      price: 149.95,
+      image: `${base}/images/Titels/Fan shop 6.png`,
+      category: "Premium Outwear"
+    }
+  ];
+
+  let selectedProduct = $state<any>(null);
+  let orderSuccess = $state(false);
+  let selectedSize = $state('M');
+  let jerseyPrinting = $state('');
+  let orderQty = $state(1);
+
+  function openProductDetail(product: any) {
+    selectedProduct = product;
+    orderSuccess = false;
+    selectedSize = 'M';
+    jerseyPrinting = '';
+    orderQty = 1;
+  }
+
+  function handlePlaceOrder() {
+    orderSuccess = true;
+    setTimeout(() => {
+      selectedProduct = null;
+      orderSuccess = false;
+    }, 2500);
   }
 </script>
 
@@ -134,17 +196,129 @@
       </div>
     </Card>
     
-    <!-- Promo Banner -->
-    <Card class="promo-banner mt-4 hover-scale">
-      <div class="promo-content">
-        <div class="ucl-logo-mini">🏆</div>
-        <h3>Shop Official UCL Gear</h3>
-        <p>Get the authentic match jerseys and training kits.</p>
-        <Button variant="secondary" size="sm" class="mt-4 rounded-btn">Visit Store</Button>
+    <!-- FC Bayern Official Megastore -->
+    <Card title="FC Bayern Megastore 🛒" class="mt-4 hover-scale shop-card">
+      <div class="shop-grid">
+        {#each shopProducts as product}
+          <div role="button" tabindex="0" onclick={() => openProductDetail(product)} class="shop-item clickable-shop-item">
+            <div class="shop-img-wrapper">
+              <img src={product.image} alt={product.name} class="shop-img" />
+              <span class="shop-badge">{product.category}</span>
+            </div>
+            <div class="shop-info">
+              <h4 class="product-name">{product.name}</h4>
+              <div class="product-footer">
+                <span class="product-price">€{product.price.toFixed(2)}</span>
+                <span class="quick-buy-btn"><ShoppingBag size={14} /> Buy</span>
+              </div>
+            </div>
+          </div>
+        {/each}
       </div>
     </Card>
   </div>
 </div>
+
+{#if selectedProduct}
+  <div class="modal-overlay animate-fade" onclick={() => selectedProduct = null}>
+    <div class="modal-content animate-in" onclick={(e) => e.stopPropagation()}>
+      <button class="close-btn" onclick={() => selectedProduct = null}>&times;</button>
+      
+      {#if orderSuccess}
+        <div class="checkout-success-view">
+          <div class="success-icon-badge">✓</div>
+          <h2>Order Received!</h2>
+          <p>Your order for <strong>{selectedProduct.name}</strong> (Size {selectedSize}) has been placed. The amount of €{(selectedProduct.price * orderQty).toFixed(2)} will be debited from your personal squad ledger.</p>
+          <div class="success-footer-note">Authorized via SpielerPlus Vault</div>
+        </div>
+      {:else}
+        <div class="checkout-header-banner">
+          <div class="comp-badge-shop">
+            <ShoppingBag size={16} />
+            <span>Official Team Merchandising</span>
+          </div>
+          <h2>Checkout Order</h2>
+          <p>Secure purchase through personal squad member ledger</p>
+        </div>
+
+        <div class="checkout-body-grid">
+          <!-- Product image and details -->
+          <div class="checkout-product-preview">
+            <div class="checkout-img-wrapper">
+              <img src={selectedProduct.image} alt="" class="checkout-img" />
+            </div>
+            <h3 class="preview-title">{selectedProduct.name}</h3>
+            <span class="preview-price">€{selectedProduct.price.toFixed(2)} / unit</span>
+          </div>
+
+          <!-- Configuration options -->
+          <div class="checkout-form-options">
+            <div class="form-group">
+              <label for="size-select">Select Size</label>
+              <div class="size-buttons">
+                {#each ['S', 'M', 'L', 'XL'] as size}
+                  <button 
+                    class="size-btn" 
+                    class:active={selectedSize === size}
+                    onclick={() => selectedSize = size}
+                  >
+                    {size}
+                  </button>
+                {/each}
+              </div>
+            </div>
+
+            {#if selectedProduct.category === 'Matchwear'}
+              <div class="form-group">
+                <label for="jersey-print">Custom Jersey Printing (+ €15.00)</label>
+                <input 
+                  id="jersey-print"
+                  type="text" 
+                  placeholder="e.g. MÜLLER 25" 
+                  bind:value={jerseyPrinting}
+                  class="premium-input"
+                />
+              </div>
+            {/if}
+
+            <div class="form-group">
+              <label for="qty-select">Quantity</label>
+              <div class="qty-counter">
+                <button class="qty-btn" onclick={() => orderQty = Math.max(1, orderQty - 1)}>-</button>
+                <span class="qty-value">{orderQty}</span>
+                <button class="qty-btn" onclick={() => orderQty += 1}>+</button>
+              </div>
+            </div>
+
+            <!-- Ledger Summary -->
+            <div class="checkout-summary-receipt">
+              <div class="receipt-line">
+                <span>Subtotal ({orderQty} item{orderQty > 1 ? 's' : ''})</span>
+                <span>€{(selectedProduct.price * orderQty).toFixed(2)}</span>
+              </div>
+              {#if jerseyPrinting && selectedProduct.category === 'Matchwear'}
+                <div class="receipt-line">
+                  <span>Custom Printing Fee</span>
+                  <span>€15.00</span>
+                </div>
+              {/if}
+              <div class="receipt-line total">
+                <span>Total Squad Ledger Debit</span>
+                <span class="text-primary">
+                  €{((selectedProduct.price * orderQty) + (jerseyPrinting && selectedProduct.category === 'Matchwear' ? 15 : 0)).toFixed(2)}
+                </span>
+              </div>
+            </div>
+
+            <button class="checkout-submit-btn w-full mt-6" onclick={handlePlaceOrder}>
+              <CreditCard size={18} /> Confirm squad member purchase
+            </button>
+          </div>
+        </div>
+      {/if}
+    </div>
+  </div>
+{/if}
 
 <style>
   .dashboard-grid {
@@ -386,28 +560,507 @@
     margin: 0.25rem 0 0;
   }
 
-  :global(.promo-banner) {
-    background-color: var(--accent);
+  /* Megastore Sidebar Card */
+  .shop-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .clickable-shop-item {
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .clickable-shop-item:hover {
+    transform: translateY(-2px) scale(1.02);
+    border-color: rgba(220, 38, 38, 0.25) !important;
+    box-shadow: var(--shadow-sm);
+    background-color: rgba(220, 38, 38, 0.01);
+  }
+
+  .shop-item {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: white;
+  }
+
+  .shop-img-wrapper {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    background: #fafafa;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(15, 23, 42, 0.03);
+  }
+
+  .shop-img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .clickable-shop-item:hover .shop-img {
+    transform: scale(1.08);
+  }
+
+  .shop-badge {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background: rgba(15, 23, 42, 0.8);
     color: white;
-    background-image: radial-gradient(circle at top right, rgba(220, 38, 38, 0.2), transparent);
-  }
-
-  .ucl-logo-mini {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-
-  .promo-content h3 {
-    margin: 0 0 0.75rem 0;
-    font-size: 1.25rem;
+    font-size: 0.55rem;
     font-weight: 800;
+    padding: 1px 4px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
   }
-  
-  .promo-content p {
-    margin: 0;
+
+  .shop-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .product-name {
+    font-size: 0.8125rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 0.5rem;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .product-price {
+    font-size: 0.875rem;
+    font-weight: 900;
+    color: var(--text-main);
+  }
+
+  .quick-buy-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background-color: rgba(220, 38, 38, 0.08);
+    color: var(--primary);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Interactive Premium Modal Styling */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 1.5rem;
+  }
+
+  .modal-content {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 620px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    background: rgba(15, 23, 42, 0.05);
+    border: none;
+    font-size: 1.75rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+  }
+
+  .close-btn:hover {
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--primary);
+  }
+
+  /* Success View Screen */
+  .checkout-success-view {
+    padding: 4rem 2rem;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(5, 150, 105, 0.04) 0%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .success-icon-badge {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: rgba(5, 150, 105, 0.1);
+    color: #059669;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    border: 3px solid #059669;
+    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.2);
+    animation: successScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  @keyframes successScale {
+    from { transform: scale(0.6); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .checkout-success-view h2 {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--text-main);
+    margin: 0 0 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .checkout-success-view p {
     font-size: 0.9375rem;
-    opacity: 0.8;
+    color: var(--text-muted);
+    max-width: 440px;
     line-height: 1.5;
+    margin: 0 0 1.5rem;
+  }
+
+  .success-footer-note {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #059669;
+    background: rgba(5, 150, 105, 0.08);
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+  }
+
+  /* Checkout Main UI */
+  .checkout-header-banner {
+    padding: 2.5rem 2rem 1.5rem;
+    background: linear-gradient(180deg, rgba(220, 38, 38, 0.03) 0%, transparent 100%);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .comp-badge-shop {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(15, 23, 42, 0.05);
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .checkout-header-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  .checkout-header-banner p {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .checkout-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 2rem;
+    padding: 2rem;
+    background: #fafafa;
+  }
+
+  @media (max-width: 600px) {
+    .checkout-body-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .checkout-product-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .checkout-img-wrapper {
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fafafa;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(15, 23, 42, 0.02);
+  }
+
+  .checkout-img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+  }
+
+  .preview-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 0.5rem;
+    line-height: 1.4;
+  }
+
+  .preview-price {
+    font-size: 1.125rem;
+    font-weight: 900;
+    color: var(--primary);
+  }
+
+  /* Checkout Form Options */
+  .checkout-form-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .size-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .size-btn {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--border);
+    padding: 0.5rem 0;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .size-btn:hover {
+    border-color: var(--primary);
+    background: rgba(220, 38, 38, 0.02);
+  }
+
+  .size-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
+  }
+
+  .premium-input {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .premium-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+  }
+
+  .qty-counter {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    width: fit-content;
+    overflow: hidden;
+  }
+
+  .qty-btn {
+    border: none;
+    background: none;
+    width: 36px;
+    height: 36px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .qty-btn:hover {
+    background: #f1f5f9;
+  }
+
+  .qty-value {
+    width: 44px;
+    text-align: center;
+    font-weight: 800;
+    color: var(--text-main);
+    font-size: 0.9375rem;
+  }
+
+  /* Checkout Receipt Summary */
+  .checkout-summary-receipt {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.125rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+    margin-top: 0.5rem;
+  }
+
+  .receipt-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .receipt-line.total {
+    border-top: 1px dashed var(--border);
+    padding-top: 0.625rem;
+    margin-top: 0.625rem;
+    margin-bottom: 0;
+    font-size: 0.9375rem;
+    font-weight: 850;
+    color: var(--text-main);
+  }
+
+  .checkout-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.875rem;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2);
+  }
+
+  .checkout-submit-btn:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+  }
+
+  .checkout-submit-btn:active {
+    transform: translateY(0);
+  }
+
+  /* Animations */
+  .animate-fade {
+    animation: overlayFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-in {
+    animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes overlayFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
   }
 </style>
 

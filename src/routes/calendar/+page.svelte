@@ -4,6 +4,8 @@
   import dayjs from 'dayjs';
   import { events } from '$lib/stores/mockData.svelte';
   import { footballData } from '$lib/stores/footballStore.svelte.ts';
+  import { base } from '$app/paths';
+  import { goto } from '$app/navigation';
 
   let currentDate = $state(dayjs());
 
@@ -80,7 +82,27 @@
           <div class="day-number">{day}</div>
           <div class="day-events">
             {#each getEventsForDay(day) as event}
-              <div class="event-block {event.type}" class:ucl-block={event.isUCL}>
+              <div 
+                role="button" 
+                tabindex="0" 
+                onclick={(e) => {
+                  e.stopPropagation();
+                  if (event.type === 'match') {
+                    goto(`${base}/football-center`);
+                  } else {
+                    goto(`${base}/events/${event.id}`);
+                  }
+                }}
+                onkeydown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.stopPropagation();
+                    if (event.type === 'match') goto(`${base}/football-center`);
+                    else goto(`${base}/events/${event.id}`);
+                  }
+                }}
+                class="event-block {event.type}" 
+                class:ucl-block={event.isUCL}
+              >
                 <span class="comp">{event.competition?.slice(0, 3) || 'EV'}</span>
                 <span class="title">{event.title}</span>
               </div>
@@ -204,6 +226,7 @@
     gap: 0.5rem;
     font-weight: 600;
     transition: var(--transition);
+    cursor: pointer;
   }
 
   .event-block:hover {

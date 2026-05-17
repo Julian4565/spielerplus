@@ -4,6 +4,7 @@
   import Avatar from '$lib/components/ui/Avatar.svelte';
   import { getLocalBayernSquad } from '$lib/stores/footballStore.svelte.ts';
   import { Search, Filter, Phone, Mail } from 'lucide-svelte';
+  import { base } from '$app/paths';
 
   let searchQuery = $state('');
   
@@ -29,7 +30,7 @@
 
 <div class="team-grid">
   {#each filteredMembers as member}
-    <a href="/team/{member.id}" class="member-card-link" style="text-decoration: none; color: inherit; display: block;">
+    <a href="{base}/team/{member.id}" class="member-card-link" style="text-decoration: none; color: inherit; display: block;">
       <Card noPadding class="member-card hover-scale">
         <div class="member-visual">
           <div class="member-photo-container">

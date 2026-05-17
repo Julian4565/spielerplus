@@ -1,4 +1,5 @@
 import { footballApi } from '$lib/services/footballApi';
+import { base } from '$app/paths';
 
 // Store for real-time football data
 export const footballData = $state({
@@ -17,15 +18,15 @@ export const footballData = $state({
 
 const getMockFixtures = () => [
   { id: 101, competition: { name: 'Bundesliga', emblem: 'https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg', code: 'BL1' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 4, name: 'Borussia Dortmund', shortName: 'Dortmund', crest: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg' }, utcDate: new Date(Date.now() + 86400000 * 2).toISOString(), venue: 'Allianz Arena' },
-  { id: 102, competition: { name: 'Champions League', emblem: 'https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg', code: 'CL' }, homeTeam: { id: 86, name: 'Real Madrid CF', shortName: 'Real Madrid', crest: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg' }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, utcDate: new Date(Date.now() + 86400000 * 6).toISOString(), venue: 'Santiago Bernabéu' },
+  { id: 102, competition: { name: 'Champions League', emblem: `${base}/images/Titels/Champions league.png`, code: 'CL' }, homeTeam: { id: 86, name: 'Real Madrid CF', shortName: 'Real Madrid', crest: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg' }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, utcDate: new Date(Date.now() + 86400000 * 6).toISOString(), venue: 'Santiago Bernabéu' },
   { id: 103, competition: { name: 'Bundesliga', emblem: 'https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg', code: 'BL1' }, homeTeam: { id: 721, name: 'RB Leipzig', shortName: 'RB Leipzig', crest: 'https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg' }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, utcDate: new Date(Date.now() + 86400000 * 10).toISOString(), venue: 'Red Bull Arena' },
-  { id: 104, competition: { name: 'DFB Pokal', emblem: 'https://upload.wikimedia.org/wikipedia/en/b/b3/DFB-Pokal_logo_2021.svg', code: 'DFB' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 24, name: 'VfL Bochum', shortName: 'Bochum', crest: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/VfL_Bochum_1848_logo.svg' }, utcDate: new Date(Date.now() + 86400000 * 14).toISOString(), venue: 'Allianz Arena' },
-  { id: 105, competition: { name: 'Champions League', emblem: 'https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg', code: 'CL' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 524, name: 'Paris Saint-Germain FC', shortName: 'PSG', crest: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg' }, utcDate: new Date(Date.now() + 86400000 * 18).toISOString(), venue: 'Allianz Arena' }
+  { id: 104, competition: { name: 'DFB Pokal', emblem: `${base}/images/Titels/DFB Pokal.png`, code: 'DFB' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 24, name: 'VfL Bochum', shortName: 'Bochum', crest: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/VfL_Bochum_1848_logo.svg' }, utcDate: new Date(Date.now() + 86400000 * 14).toISOString(), venue: 'Allianz Arena' },
+  { id: 105, competition: { name: 'Champions League', emblem: `${base}/images/Titels/Champions league.png`, code: 'CL' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 524, name: 'Paris Saint-Germain FC', shortName: 'PSG', crest: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg' }, utcDate: new Date(Date.now() + 86400000 * 18).toISOString(), venue: 'Allianz Arena' }
 ];
 
 const getMockResults = () => [
   { id: 91, competition: { name: 'Bundesliga', code: 'BL1' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 2, name: 'Bayer 04 Leverkusen', shortName: 'Leverkusen', crest: 'https://upload.wikimedia.org/wikipedia/en/5/59/Bayer_04_Leverkusen_logo.svg' }, score: { fullTime: { home: 3, away: 1 } }, utcDate: new Date(Date.now() - 86400000 * 4).toISOString() },
-  { id: 92, competition: { name: 'Champions League', code: 'CL' }, homeTeam: { id: 11, name: 'Arsenal FC', shortName: 'Arsenal', crest: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg' }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, score: { fullTime: { home: 0, away: 2 } }, utcDate: new Date(Date.now() - 86400000 * 7).toISOString() },
+  { id: 92, competition: { name: 'Champions League', emblem: `${base}/images/Titels/Champions league.png`, code: 'CL' }, homeTeam: { id: 11, name: 'Arsenal FC', shortName: 'Arsenal', crest: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg' }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, score: { fullTime: { home: 0, away: 2 } }, utcDate: new Date(Date.now() - 86400000 * 7).toISOString() },
   { id: 93, competition: { name: 'Bundesliga', code: 'BL1' }, homeTeam: { id: 9, name: 'Eintracht Frankfurt', shortName: 'Frankfurt', crest: 'https://upload.wikimedia.org/wikipedia/commons/0/04/Eintracht_Frankfurt_Logo.svg' }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, score: { fullTime: { home: 1, away: 4 } }, utcDate: new Date(Date.now() - 86400000 * 12).toISOString() }
 ];
 
@@ -71,6 +72,49 @@ const getMockSquad = () => [
   { id: 429, name: 'Michael Olise', position: 'Attacker', dateOfBirth: '2001-12-12', shirtNumber: 17 }
 ];
 
+function sanitizeFixtureOrResult(match: any) {
+  if (!match) return null;
+  // Overrides Champions League & DFB Pokal emblem with local ones
+  if (match.competition) {
+    const compName = match.competition.name || '';
+    const compCode = match.competition.code || '';
+    if (compName.includes('Champions League') || compCode === 'CL' || compName.includes('UCL')) {
+      match.competition.emblem = `${base}/images/Titels/Champions league.png`;
+    } else if (compName.includes('DFB Pokal') || compCode === 'DFB' || compName.includes('DFB')) {
+      match.competition.emblem = `${base}/images/Titels/DFB Pokal.png`;
+    }
+  }
+
+  // Ensure home and away teams have valid crests and names
+  if (!match.homeTeam || !match.awayTeam) return null;
+  if (!match.homeTeam.crest || match.homeTeam.crest === '' || match.homeTeam.crest.includes('placeholder')) {
+    return null;
+  }
+  if (!match.awayTeam.crest || match.awayTeam.crest === '' || match.awayTeam.crest.includes('placeholder')) {
+    return null;
+  }
+
+  return match;
+}
+
+function sanitizeStandings(standingsData: any) {
+  if (!standingsData || !standingsData.standings) return standingsData;
+  standingsData.standings = standingsData.standings.map((std: any) => {
+    if (std.table) {
+      std.table = std.table
+        .map((row: any) => {
+          if (row.team && (!row.team.crest || row.team.crest === '' || row.team.crest.includes('placeholder'))) {
+            return null;
+          }
+          return row;
+        })
+        .filter(Boolean);
+    }
+    return std;
+  });
+  return standingsData;
+}
+
 export async function refreshFootballData() {
   if (footballData.loading) return;
   
@@ -89,25 +133,33 @@ export async function refreshFootballData() {
     
     // Process results individually to allow partial success
     if (results[0].status === 'fulfilled' && results[0].value) {
-      footballData.fixtures = results[0].value.matches || [];
+      const rawMatches = results[0].value.matches || [];
+      footballData.fixtures = rawMatches.map(sanitizeFixtureOrResult).filter(Boolean);
+      if (footballData.fixtures.length === 0) {
+        footballData.fixtures = getMockFixtures();
+      }
     } else {
       footballData.fixtures = getMockFixtures();
     }
 
     if (results[1].status === 'fulfilled' && results[1].value) {
-      footballData.results = results[1].value.matches || [];
+      const rawMatches = results[1].value.matches || [];
+      footballData.results = rawMatches.map(sanitizeFixtureOrResult).filter(Boolean);
+      if (footballData.results.length === 0) {
+        footballData.results = getMockResults();
+      }
     } else {
       footballData.results = getMockResults();
     }
 
     if (results[2].status === 'fulfilled' && results[2].value) {
-      footballData.standings.bundesliga = results[2].value;
+      footballData.standings.bundesliga = sanitizeStandings(results[2].value);
     } else {
       footballData.standings.bundesliga = getMockBundesliga();
     }
 
     if (results[3].status === 'fulfilled' && results[3].value) {
-      footballData.standings.cl = results[3].value;
+      footballData.standings.cl = sanitizeStandings(results[3].value);
     } else {
       footballData.standings.cl = getMockCL();
     }
