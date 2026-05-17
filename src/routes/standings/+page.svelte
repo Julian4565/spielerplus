@@ -1,7 +1,14 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { footballData, refreshFootballData } from '$lib/stores/footballStore.svelte.ts';
   import Card from '$lib/components/ui/Card.svelte';
   import { BarChart3, Trophy, ChevronRight, Activity } from 'lucide-svelte';
+
+  onMount(() => {
+    if (!footballData.lastUpdated) {
+      refreshFootballData();
+    }
+  });
 
   const BAYERN_ID = 5;
 

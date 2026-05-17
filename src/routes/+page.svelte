@@ -5,41 +5,12 @@
   import { events, teamMembers, polls, appState } from '$lib/stores/mockData.svelte';
   import { footballData } from '$lib/stores/footballStore.svelte.ts';
   import { Calendar, Cake, Megaphone, CheckCircle2, MapPin } from 'lucide-svelte';
+  import { localBayernSquad } from '$lib/stores/footballStore.svelte.ts';
 
   let upcomingEvents = $derived(footballData.fixtures.slice(0, 3));
-  // Map API names to local filenames
-  function getPlayerImage(name: string) {
-    const fileMap: Record<string, string> = {
-      'Aleksandar Pavlović': 'Aleksander Pavlovic .png',
-      'Alphonso Davies': 'Alphonso Davies .png',
-      'Dayot Upamecano': 'Dayot Upamecano.png',
-      'Harry Kane': 'Harry Kane .png',
-      'Jamal Musiala': 'Jamal Musiala .png',
-      'Jonas Urbig': 'Jonas Urbig .png',
-      'Jonathan Tah': 'Jonathan Tah .png',
-      'Joshua Kimmich': 'Joshua Kimmich .png',
-      'Josip Stanišić': 'Josip Stanisic.png',
-      'Konrad Laimer': 'Konrad Laimer .png',
-      'Leon Goretzka': 'Leon Goretzka .png',
-      'Luis Díaz': 'Luis Diaz.png',
-      'Manuel Neuer': 'Manuel Neuer .png',
-      'Michael Olise': 'Michael Olise .png',
-      'Serge Gnabry': 'Serge Gnabry.png',
-      'Tom Bischof': 'Tom Bischof .png'
-    };
-    if (fileMap[name]) return `/images/players/${encodeURIComponent(fileMap[name])}`;
-    return `/images/players/${encodeURIComponent(name)}.png`;
-  }
 
   let birthdays = $derived((() => {
-    if (footballData.squad.length > 0) {
-      // Pick top 2 for mock birthdays
-      return footballData.squad.slice(0, 2).map((p: any) => ({
-        name: p.name,
-        avatar: getPlayerImage(p.name)
-      }));
-    }
-    return teamMembers.slice(0, 2);
+    return localBayernSquad.slice(0, 2);
   })());
 
   function getMonth(dateStr: string) {

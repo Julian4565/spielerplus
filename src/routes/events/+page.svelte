@@ -5,40 +5,12 @@
   import { footballData } from '$lib/stores/footballStore.svelte.ts';
   import { MapPin, Clock, Users, Check, X, HelpCircle } from 'lucide-svelte';
 
-  let activeTab = $state('upcoming'); // upcoming, past
-  
-  const fileMap: Record<string, string> = {
-    'Aleksandar Pavlović': 'Aleksander Pavlovic .png',
-    'Alphonso Davies': 'Alphonso Davies .png',
-    'Dayot Upamecano': 'Dayot Upamecano.png',
-    'Harry Kane': 'Harry Kane .png',
-    'Jamal Musiala': 'Jamal Musiala .png',
-    'Jonas Urbig': 'Jonas Urbig .png',
-    'Jonathan Tah': 'Jonathan Tah .png',
-    'Joshua Kimmich': 'Joshua Kimmich .png',
-    'Josip Stanišić': 'Josip Stanisic.png',
-    'Konrad Laimer': 'Konrad Laimer .png',
-    'Leon Goretzka': 'Leon Goretzka .png',
-    'Luis Díaz': 'Luis Diaz.png',
-    'Manuel Neuer': 'Manuel Neuer .png',
-    'Michael Olise': 'Michael Olise .png',
-    'Serge Gnabry': 'Serge Gnabry.png',
-    'Tom Bischof': 'Tom Bischof .png'
-  };
+  import { localBayernSquad } from '$lib/stores/footballStore.svelte.ts';
 
-  function getLocalPlayers() {
-    let squad = footballData.squad.length > 0 ? footballData.squad : events.flatMap(e => []); // Fallback
-    // Only use players that actually have a local image mapped
-    return squad
-      .filter((p: any) => fileMap[p.name] !== undefined)
-      .map((p: any) => ({
-        name: p.name,
-        avatar: `/images/players/${encodeURIComponent(fileMap[p.name])}`
-      }));
-  }
+  let activeTab = $state('upcoming'); // upcoming, past
 
   let allEvents = $derived(() => {
-    const localPlayers = getLocalPlayers();
+    const localPlayers = localBayernSquad;
     
     // Create consistent mocked attendance using the strictly available local players
     const yesPlayers = localPlayers.slice(0, Math.floor(localPlayers.length * 0.7));

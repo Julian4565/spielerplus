@@ -2,53 +2,13 @@
   import Card from '$lib/components/ui/Card.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import Avatar from '$lib/components/ui/Avatar.svelte';
-  import { teamMembers } from '$lib/stores/mockData.svelte';
+  import { localBayernSquad } from '$lib/stores/footballStore.svelte.ts';
   import { Search, Filter, Phone, Mail } from 'lucide-svelte';
 
   let searchQuery = $state('');
   
-  // The mapping is now handled inside allMembers directly
-
-  // Combine real squad with mock data to enrich it (avatars, etc)
-  let allMembers = $derived(() => {
-    // Only use local player images. Reject fallback or missing.
-    const fileMap: Record<string, string> = {
-      'Aleksandar Pavlović': 'Aleksander Pavlovic .png',
-      'Alphonso Davies': 'Alphonso Davies .png',
-      'Dayot Upamecano': 'Dayot Upamecano.png',
-      'Harry Kane': 'Harry Kane .png',
-      'Jamal Musiala': 'Jamal Musiala .png',
-      'Jonas Urbig': 'Jonas Urbig .png',
-      'Jonathan Tah': 'Jonathan Tah .png',
-      'Joshua Kimmich': 'Joshua Kimmich .png',
-      'Josip Stanišić': 'Josip Stanisic.png',
-      'Konrad Laimer': 'Konrad Laimer .png',
-      'Leon Goretzka': 'Leon Goretzka .png',
-      'Luis Díaz': 'Luis Diaz.png',
-      'Manuel Neuer': 'Manuel Neuer .png',
-      'Michael Olise': 'Michael Olise .png',
-      'Serge Gnabry': 'Serge Gnabry.png',
-      'Tom Bischof': 'Tom Bischof .png'
-    };
-
-    let squad = footballData.squad.length > 0 ? footballData.squad : teamMembers;
-    
-    return squad
-      .filter((player: any) => fileMap[player.name] !== undefined)
-      .map((player: any) => {
-        const mock = teamMembers.find(m => m.name === player.name);
-        return {
-          id: player.id?.toString() || mock?.id,
-          name: player.name,
-          role: player.position === 'Coach' ? 'Staff' : 'Player',
-          position: player.position,
-          avatar: `/images/players/${encodeURIComponent(fileMap[player.name])}`,
-          availability: mock?.availability || 'available',
-          jerseyNumber: mock?.jerseyNumber || player.shirtNumber || (player.id % 99),
-          birthdate: player.dateOfBirth || '1990-01-01'
-        };
-      });
-  });
+  // Single Source of Truth for local FC Bayern squad
+  let allMembers = $derived(() => localBayernSquad);
 
   let filteredMembers = $derived(
     allMembers().filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()))
