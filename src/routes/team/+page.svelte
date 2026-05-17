@@ -2,13 +2,13 @@
   import Card from '$lib/components/ui/Card.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import Avatar from '$lib/components/ui/Avatar.svelte';
-  import { localBayernSquad } from '$lib/stores/footballStore.svelte.ts';
+  import { getLocalBayernSquad } from '$lib/stores/footballStore.svelte.ts';
   import { Search, Filter, Phone, Mail } from 'lucide-svelte';
 
   let searchQuery = $state('');
   
   // Single Source of Truth for local FC Bayern squad
-  let allMembers = $derived(() => localBayernSquad);
+  let allMembers = $derived(() => getLocalBayernSquad());
 
   let filteredMembers = $derived(
     allMembers().filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()))

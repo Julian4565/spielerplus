@@ -5,12 +5,12 @@
   import { events, teamMembers, polls, appState } from '$lib/stores/mockData.svelte';
   import { footballData } from '$lib/stores/footballStore.svelte.ts';
   import { Calendar, Cake, Megaphone, CheckCircle2, MapPin } from 'lucide-svelte';
-  import { localBayernSquad } from '$lib/stores/footballStore.svelte.ts';
+  import { getLocalBayernSquad } from '$lib/stores/footballStore.svelte.ts';
 
   let upcomingEvents = $derived(footballData.fixtures.slice(0, 3));
 
   let birthdays = $derived((() => {
-    return localBayernSquad.slice(0, 2);
+    return getLocalBayernSquad().slice(0, 2);
   })());
 
   function getMonth(dateStr: string) {

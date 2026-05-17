@@ -3,15 +3,15 @@
   import Button from '$lib/components/ui/Button.svelte';
   import Avatar from '$lib/components/ui/Avatar.svelte';
   import ProgressBar from '$lib/components/ui/ProgressBar.svelte';
-  import { localBayernSquad } from '$lib/stores/footballStore.svelte.ts';
+  import { getLocalBayernSquad } from '$lib/stores/footballStore.svelte.ts';
   import { Download } from 'lucide-svelte';
 
   // Sort by attendance (descending)
-  let sortedMembers = $derived([...localBayernSquad].sort((a, b) => b.attendance - a.attendance));
+  let sortedMembers = $derived([...getLocalBayernSquad()].sort((a, b) => b.attendance - a.attendance));
   
   let averageAttendance = $derived(
-    localBayernSquad.length > 0 
-      ? Math.round(localBayernSquad.reduce((acc, m) => acc + m.attendance, 0) / localBayernSquad.length)
+    getLocalBayernSquad().length > 0 
+      ? Math.round(getLocalBayernSquad().reduce((acc, m) => acc + m.attendance, 0) / getLocalBayernSquad().length)
       : 0
   );
 </script>

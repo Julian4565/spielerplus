@@ -5,12 +5,12 @@
   import { footballData } from '$lib/stores/footballStore.svelte.ts';
   import { MapPin, Clock, Users, Check, X, HelpCircle } from 'lucide-svelte';
 
-  import { localBayernSquad } from '$lib/stores/footballStore.svelte.ts';
+  import { getLocalBayernSquad } from '$lib/stores/footballStore.svelte.ts';
 
   let activeTab = $state('upcoming'); // upcoming, past
 
   let allEvents = $derived(() => {
-    const localPlayers = localBayernSquad;
+    const localPlayers = getLocalBayernSquad();
     
     // Create consistent mocked attendance using the strictly available local players
     const yesPlayers = localPlayers.slice(0, Math.floor(localPlayers.length * 0.7));

@@ -129,7 +129,7 @@ export async function refreshFootballData() {
 }
 
 // Single Source of Truth for strictly local players
-export const localBayernSquad = $derived.by(() => {
+export function getLocalBayernSquad() {
   const fileMap: Record<string, string> = {
     'Aleksandar Pavlović': 'Aleksander Pavlovic .png',
     'Alphonso Davies': 'Alphonso Davies .png',
@@ -164,4 +164,4 @@ export const localBayernSquad = $derived.by(() => {
       jerseyNumber: player.shirtNumber || (player.id % 99),
       birthdate: player.dateOfBirth || '1990-01-01'
     }));
-});
+}
