@@ -92,10 +92,10 @@ export const finances = $state<any>({ balance: 0, transactions: [] });
 
 export const userProfile = $state({
   id: 'user1',
-  name: 'Julian Schmidt',
-  email: 'julian.schmidt@bayern.com',
+  name: 'Vincent Kompany',
+  email: 'vincent.kompany@bayern.com',
   role: 'Coach',
-  avatar: 'https://i.pravatar.cc/150?u=2'
+  avatar: '/images/Trainer/Vincent%20Kompany.png'
 });
 
 class AppState {

@@ -7,6 +7,35 @@
 
   let searchQuery = $state('');
   
+  // Map API names to local filenames
+  function getPlayerImage(name: string) {
+    const fileMap: Record<string, string> = {
+      'Aleksandar Pavlović': 'Aleksander Pavlovic .png',
+      'Alphonso Davies': 'Alphonso Davies .png',
+      'Dayot Upamecano': 'Dayot Upamecano.png',
+      'Harry Kane': 'Harry Kane .png',
+      'Jamal Musiala': 'Jamal Musiala .png',
+      'Jonas Urbig': 'Jonas Urbig .png',
+      'Jonathan Tah': 'Jonathan Tah .png',
+      'Joshua Kimmich': 'Joshua Kimmich .png',
+      'Josip Stanišić': 'Josip Stanisic.png',
+      'Konrad Laimer': 'Konrad Laimer .png',
+      'Leon Goretzka': 'Leon Goretzka .png',
+      'Luis Díaz': 'Luis Diaz.png',
+      'Manuel Neuer': 'Manuel Neuer .png',
+      'Michael Olise': 'Michael Olise .png',
+      'Serge Gnabry': 'Serge Gnabry.png',
+      'Tom Bischof': 'Tom Bischof .png'
+    };
+
+    if (fileMap[name]) {
+      return `/images/players/${encodeURIComponent(fileMap[name])}`;
+    }
+    
+    // Attempt generic matching for fallback if added later
+    return `/images/players/${encodeURIComponent(name)}.png`;
+  }
+
   // Combine real squad with mock data to enrich it (avatars, etc)
   let allMembers = $derived(() => {
     if (footballData.squad.length === 0) return teamMembers;
@@ -19,7 +48,7 @@
         name: player.name,
         role: player.position === 'Coach' ? 'Staff' : 'Player',
         position: player.position,
-        avatar: mock?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=random&color=fff`,
+        avatar: getPlayerImage(player.name),
         availability: mock?.availability || 'available',
         jerseyNumber: mock?.jerseyNumber || (player.id % 99),
         birthdate: player.dateOfBirth || '1990-01-01'
@@ -160,16 +189,22 @@
 
   .member-photo-container {
     position: relative;
-    width: 180px;
-    height: 180px;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: var(--shadow-md);
+    background: white;
+    z-index: 1;
   }
 
   .member-photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: top;
-    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+    object-position: top center;
+    border-radius: 50%;
     transition: var(--transition);
   }
 
