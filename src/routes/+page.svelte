@@ -25,67 +25,6 @@
   function formatTime(dateStr: string) {
     return new Date(dateStr).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   }
-
-  // Fan Shop Premium products
-  const shopProducts = [
-    {
-      id: 1,
-      name: "FC Bayern Home Kit 2026/27",
-      price: 99.95,
-      image: `${base}/images/Titels/Fan Shop.png`,
-      category: "Matchwear"
-    },
-    {
-      id: 2,
-      name: "UCL Premium Track-Jacket",
-      price: 89.95,
-      image: `${base}/images/Titels/Fan shop 2.png`,
-      category: "Training"
-    },
-    {
-      id: 3,
-      name: "Elite Training Performance Sweater",
-      price: 74.95,
-      image: `${base}/images/Titels/Fan shop 4 .png`, // note the trailing space
-      category: "Training"
-    },
-    {
-      id: 4,
-      name: "Classic Curved-Brim Cap",
-      price: 29.95,
-      image: `${base}/images/Titels/Fan shop 5 .png`, // note the trailing space
-      category: "Accessories"
-    },
-    {
-      id: 5,
-      name: "Squad Travel Hooded Winter Parka",
-      price: 149.95,
-      image: `${base}/images/Titels/Fan shop 6.png`,
-      category: "Premium Outwear"
-    }
-  ];
-
-  let selectedProduct = $state<any>(null);
-  let orderSuccess = $state(false);
-  let selectedSize = $state('M');
-  let jerseyPrinting = $state('');
-  let orderQty = $state(1);
-
-  function openProductDetail(product: any) {
-    selectedProduct = product;
-    orderSuccess = false;
-    selectedSize = 'M';
-    jerseyPrinting = '';
-    orderQty = 1;
-  }
-
-  function handlePlaceOrder() {
-    orderSuccess = true;
-    setTimeout(() => {
-      selectedProduct = null;
-      orderSuccess = false;
-    }, 2500);
-  }
 </script>
 
 <div class="dashboard-grid">
@@ -197,128 +136,21 @@
     </Card>
     
     <!-- FC Bayern Official Megastore -->
-    <Card title="FC Bayern Megastore 🛒" class="mt-4 hover-scale shop-card">
-      <div class="shop-grid">
-        {#each shopProducts as product}
-          <div role="button" tabindex="0" onclick={() => openProductDetail(product)} class="shop-item clickable-shop-item">
-            <div class="shop-img-wrapper">
-              <img src={product.image} alt={product.name} class="shop-img" />
-              <span class="shop-badge">{product.category}</span>
-            </div>
-            <div class="shop-info">
-              <h4 class="product-name">{product.name}</h4>
-              <div class="product-footer">
-                <span class="product-price">€{product.price.toFixed(2)}</span>
-                <span class="quick-buy-btn"><ShoppingBag size={14} /> Buy</span>
-              </div>
-            </div>
+    <a href="{base}/shop" class="no-underline">
+      <Card title="FC Bayern Megastore 🛒" class="mt-4 hover-scale shop-card cursor-pointer">
+        <div class="promo-content">
+          <div class="shop-banner-img-wrapper">
+            <img src="{base}/images/Titels/Fan Shop.png" alt="FC Bayern Shop" class="shop-banner-img" />
           </div>
-        {/each}
-      </div>
-    </Card>
+          <p class="mt-3 text-sm text-muted">Shop official jerseys, training gear, accessories, boots, and matchday essentials.</p>
+          <Button variant="secondary" size="sm" class="mt-3 w-full justify-center gap-2 rounded-btn">
+            <ShoppingBag size={16} /> Enter Megastore
+          </Button>
+        </div>
+      </Card>
+    </a>
   </div>
 </div>
-
-{#if selectedProduct}
-  <div class="modal-overlay animate-fade" onclick={() => selectedProduct = null}>
-    <div class="modal-content animate-in" onclick={(e) => e.stopPropagation()}>
-      <button class="close-btn" onclick={() => selectedProduct = null}>&times;</button>
-      
-      {#if orderSuccess}
-        <div class="checkout-success-view">
-          <div class="success-icon-badge">✓</div>
-          <h2>Order Received!</h2>
-          <p>Your order for <strong>{selectedProduct.name}</strong> (Size {selectedSize}) has been placed. The amount of €{(selectedProduct.price * orderQty).toFixed(2)} will be debited from your personal squad ledger.</p>
-          <div class="success-footer-note">Authorized via SpielerPlus Vault</div>
-        </div>
-      {:else}
-        <div class="checkout-header-banner">
-          <div class="comp-badge-shop">
-            <ShoppingBag size={16} />
-            <span>Official Team Merchandising</span>
-          </div>
-          <h2>Checkout Order</h2>
-          <p>Secure purchase through personal squad member ledger</p>
-        </div>
-
-        <div class="checkout-body-grid">
-          <!-- Product image and details -->
-          <div class="checkout-product-preview">
-            <div class="checkout-img-wrapper">
-              <img src={selectedProduct.image} alt="" class="checkout-img" />
-            </div>
-            <h3 class="preview-title">{selectedProduct.name}</h3>
-            <span class="preview-price">€{selectedProduct.price.toFixed(2)} / unit</span>
-          </div>
-
-          <!-- Configuration options -->
-          <div class="checkout-form-options">
-            <div class="form-group">
-              <label for="size-select">Select Size</label>
-              <div class="size-buttons">
-                {#each ['S', 'M', 'L', 'XL'] as size}
-                  <button 
-                    class="size-btn" 
-                    class:active={selectedSize === size}
-                    onclick={() => selectedSize = size}
-                  >
-                    {size}
-                  </button>
-                {/each}
-              </div>
-            </div>
-
-            {#if selectedProduct.category === 'Matchwear'}
-              <div class="form-group">
-                <label for="jersey-print">Custom Jersey Printing (+ €15.00)</label>
-                <input 
-                  id="jersey-print"
-                  type="text" 
-                  placeholder="e.g. MÜLLER 25" 
-                  bind:value={jerseyPrinting}
-                  class="premium-input"
-                />
-              </div>
-            {/if}
-
-            <div class="form-group">
-              <label for="qty-select">Quantity</label>
-              <div class="qty-counter">
-                <button class="qty-btn" onclick={() => orderQty = Math.max(1, orderQty - 1)}>-</button>
-                <span class="qty-value">{orderQty}</span>
-                <button class="qty-btn" onclick={() => orderQty += 1}>+</button>
-              </div>
-            </div>
-
-            <!-- Ledger Summary -->
-            <div class="checkout-summary-receipt">
-              <div class="receipt-line">
-                <span>Subtotal ({orderQty} item{orderQty > 1 ? 's' : ''})</span>
-                <span>€{(selectedProduct.price * orderQty).toFixed(2)}</span>
-              </div>
-              {#if jerseyPrinting && selectedProduct.category === 'Matchwear'}
-                <div class="receipt-line">
-                  <span>Custom Printing Fee</span>
-                  <span>€15.00</span>
-                </div>
-              {/if}
-              <div class="receipt-line total">
-                <span>Total Squad Ledger Debit</span>
-                <span class="text-primary">
-                  €{((selectedProduct.price * orderQty) + (jerseyPrinting && selectedProduct.category === 'Matchwear' ? 15 : 0)).toFixed(2)}
-                </span>
-              </div>
-            </div>
-
-            <button class="checkout-submit-btn w-full mt-6" onclick={handlePlaceOrder}>
-              <CreditCard size={18} /> Confirm squad member purchase
-            </button>
-          </div>
-        </div>
-      {/if}
-    </div>
-  </div>
-{/if}
 
 <style>
   .dashboard-grid {

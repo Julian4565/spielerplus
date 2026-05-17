@@ -20,14 +20,14 @@ const getMockFixtures = () => [
   { id: 101, competition: { name: 'Bundesliga', emblem: 'https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg', code: 'BL1' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 4, name: 'Borussia Dortmund', shortName: 'Dortmund', crest: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg' }, utcDate: new Date(Date.now() + 86400000 * 2).toISOString(), venue: 'Allianz Arena' },
   { id: 102, competition: { name: 'Champions League', emblem: `${base}/images/Titels/Champions league.png`, code: 'CL' }, homeTeam: { id: 86, name: 'Real Madrid CF', shortName: 'Real Madrid', crest: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg' }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, utcDate: new Date(Date.now() + 86400000 * 6).toISOString(), venue: 'Santiago Bernabéu' },
   { id: 103, competition: { name: 'Bundesliga', emblem: 'https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg', code: 'BL1' }, homeTeam: { id: 721, name: 'RB Leipzig', shortName: 'RB Leipzig', crest: 'https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg' }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, utcDate: new Date(Date.now() + 86400000 * 10).toISOString(), venue: 'Red Bull Arena' },
-  { id: 104, competition: { name: 'DFB Pokal', emblem: `${base}/images/Titels/DFB Pokal.png`, code: 'DFB' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 24, name: 'VfL Bochum', shortName: 'Bochum', crest: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/VfL_Bochum_1848_logo.svg' }, utcDate: new Date(Date.now() + 86400000 * 14).toISOString(), venue: 'Allianz Arena' },
+  { id: 104, competition: { name: 'DFB Pokal', emblem: `${base}/images/Titels/DFB Pokal.png`, code: 'DFB' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 24, name: 'VfL Bochum', shortName: 'Bochum', crest: `${base}/images/Titels/Bochum .png` }, utcDate: new Date(Date.now() + 86400000 * 14).toISOString(), venue: 'Allianz Arena' },
   { id: 105, competition: { name: 'Champions League', emblem: `${base}/images/Titels/Champions league.png`, code: 'CL' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 524, name: 'Paris Saint-Germain FC', shortName: 'PSG', crest: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg' }, utcDate: new Date(Date.now() + 86400000 * 18).toISOString(), venue: 'Allianz Arena' }
 ];
 
 const getMockResults = () => [
   { id: 91, competition: { name: 'Bundesliga', code: 'BL1' }, homeTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, awayTeam: { id: 2, name: 'Bayer 04 Leverkusen', shortName: 'Leverkusen', crest: 'https://upload.wikimedia.org/wikipedia/en/5/59/Bayer_04_Leverkusen_logo.svg' }, score: { fullTime: { home: 3, away: 1 } }, utcDate: new Date(Date.now() - 86400000 * 4).toISOString() },
   { id: 92, competition: { name: 'Champions League', emblem: `${base}/images/Titels/Champions league.png`, code: 'CL' }, homeTeam: { id: 11, name: 'Arsenal FC', shortName: 'Arsenal', crest: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg' }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, score: { fullTime: { home: 0, away: 2 } }, utcDate: new Date(Date.now() - 86400000 * 7).toISOString() },
-  { id: 93, competition: { name: 'Bundesliga', code: 'BL1' }, homeTeam: { id: 9, name: 'Eintracht Frankfurt', shortName: 'Frankfurt', crest: 'https://upload.wikimedia.org/wikipedia/commons/0/04/Eintracht_Frankfurt_Logo.svg' }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, score: { fullTime: { home: 1, away: 4 } }, utcDate: new Date(Date.now() - 86400000 * 12).toISOString() }
+  { id: 93, competition: { name: 'Bundesliga', code: 'BL1' }, homeTeam: { id: 9, name: 'Eintracht Frankfurt', shortName: 'Frankfurt', crest: `${base}/images/Titels/Frankfurt .png` }, awayTeam: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, score: { fullTime: { home: 1, away: 4 } }, utcDate: new Date(Date.now() - 86400000 * 12).toISOString() }
 ];
 
 const getMockBundesliga = () => ({
@@ -38,9 +38,9 @@ const getMockBundesliga = () => ({
       { position: 3, team: { id: 4, name: 'Borussia Dortmund', shortName: 'Dortmund', crest: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg' }, playedGames: 28, won: 18, draw: 6, lost: 4, goalDifference: 32, points: 60 },
       { position: 4, team: { id: 721, name: 'RB Leipzig', shortName: 'RB Leipzig', crest: 'https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg' }, playedGames: 28, won: 17, draw: 5, lost: 6, goalDifference: 25, points: 56 },
       { position: 5, team: { id: 10, name: 'VfB Stuttgart', shortName: 'Stuttgart', crest: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/VfB_Stuttgart_1893_Logo.svg' }, playedGames: 28, won: 16, draw: 6, lost: 6, goalDifference: 20, points: 54 },
-      { position: 6, team: { id: 9, name: 'Eintracht Frankfurt', shortName: 'Frankfurt', crest: 'https://upload.wikimedia.org/wikipedia/commons/0/04/Eintracht_Frankfurt_Logo.svg' }, playedGames: 28, won: 14, draw: 8, lost: 6, goalDifference: 12, points: 50 },
-      { position: 7, team: { id: 17, name: 'SC Freiburg', shortName: 'Freiburg', crest: 'https://upload.wikimedia.org/wikipedia/en/d/df/SC_Freiburg_logo.svg' }, playedGames: 28, won: 12, draw: 7, lost: 9, goalDifference: 5, points: 43 },
-      { position: 8, team: { id: 28, name: '1. FC Union Berlin', shortName: 'Union Berlin', crest: 'https://upload.wikimedia.org/wikipedia/commons/4/44/1._FC_Union_Berlin_Logo.svg' }, playedGames: 28, won: 10, draw: 10, lost: 8, goalDifference: -2, points: 40 }
+      { position: 6, team: { id: 9, name: 'Eintracht Frankfurt', shortName: 'Frankfurt', crest: `${base}/images/Titels/Frankfurt .png` }, playedGames: 28, won: 14, draw: 8, lost: 6, goalDifference: 12, points: 50 },
+      { position: 7, team: { id: 17, name: 'SC Freiburg', shortName: 'Freiburg', crest: `${base}/images/Titels/Feiburg .png` }, playedGames: 28, won: 12, draw: 7, lost: 9, goalDifference: 5, points: 43 },
+      { position: 8, team: { id: 24, name: 'VfL Bochum', shortName: 'Bochum', crest: `${base}/images/Titels/Bochum .png` }, playedGames: 28, won: 9, draw: 8, lost: 11, goalDifference: -12, points: 35 }
     ]
   }]
 });
@@ -72,6 +72,19 @@ const getMockSquad = () => [
   { id: 429, name: 'Michael Olise', position: 'Attacker', dateOfBirth: '2001-12-12', shirtNumber: 17 }
 ];
 
+function checkAndOverrideCrest(team: any) {
+  if (!team) return;
+  const name = team.name || '';
+  const shortName = team.shortName || '';
+  if (name.includes('Freiburg') || shortName.includes('Freiburg')) {
+    team.crest = `${base}/images/Titels/Feiburg .png`;
+  } else if (name.includes('Frankfurt') || shortName.includes('Frankfurt')) {
+    team.crest = `${base}/images/Titels/Frankfurt .png`;
+  } else if (name.includes('Bochum') || shortName.includes('Bochum')) {
+    team.crest = `${base}/images/Titels/Bochum .png`;
+  }
+}
+
 function sanitizeFixtureOrResult(match: any) {
   if (!match) return null;
   // Overrides Champions League & DFB Pokal emblem with local ones
@@ -87,6 +100,9 @@ function sanitizeFixtureOrResult(match: any) {
 
   // Ensure home and away teams have valid crests and names
   if (!match.homeTeam || !match.awayTeam) return null;
+  checkAndOverrideCrest(match.homeTeam);
+  checkAndOverrideCrest(match.awayTeam);
+
   if (!match.homeTeam.crest || match.homeTeam.crest === '' || match.homeTeam.crest.includes('placeholder')) {
     return null;
   }
@@ -103,8 +119,11 @@ function sanitizeStandings(standingsData: any) {
     if (std.table) {
       std.table = std.table
         .map((row: any) => {
-          if (row.team && (!row.team.crest || row.team.crest === '' || row.team.crest.includes('placeholder'))) {
-            return null;
+          if (row.team) {
+            checkAndOverrideCrest(row.team);
+            if (!row.team.crest || row.team.crest === '' || row.team.crest.includes('placeholder')) {
+              return null;
+            }
           }
           return row;
         })
