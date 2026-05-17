@@ -18,7 +18,9 @@ const config = {
 		},
 		prerender: {
 			// WICHTIG: Verhindert den Abbruch des Builds bei "404 / does not begin with base"
-			handleHttpError: 'warn'
+			handleHttpError: 'warn',
+			// Ignores dynamic routes that aren't crawled during build (for SPA mode)
+			handleUnseenRoutes: 'ignore'
 		}
 	}
 };
