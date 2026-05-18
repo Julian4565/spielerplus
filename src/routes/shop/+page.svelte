@@ -44,7 +44,7 @@
       id: 5,
       name: "Classic Kaiser Turf Boots",
       price: 139.95,
-      image: `${base}/images/Titels/Fan shop 4 .png`,
+      image: `${base}/images/Titels/Fußballschuhe FC Bayern.jpg`,
       category: "Football Boots",
       description: "Premium full-grain leather classic designed for multi-ground control and absolute comfort."
     },
@@ -52,7 +52,7 @@
       id: 6,
       name: "Pro Speed Carbon FG Boots",
       price: 219.95,
-      image: `${base}/images/Titels/Fan shop 2.png`,
+      image: `${base}/images/Titels/Fußballschuhe FC Bayern.jpg`,
       category: "Football Boots",
       description: "Lightweight carbon-fiber frame engineered for rapid accelerations and supreme agility."
     },

@@ -23,6 +23,11 @@
 
   let showDiagnostics = $state(false);
   let selectedMatch = $state<any>(null);
+  let selectedArticle = $state<any>(null);
+
+  function openArticle(article: any) {
+    selectedArticle = article;
+  }
 
   function openMatchDetails(match: any) {
     const isFinished = match.status === 'FINISHED' || match.status === 'finished' || (match.score && match.score.fullTime && match.score.fullTime.home !== null);
@@ -229,8 +234,14 @@
         </div>
         
         <Card noPadding class="news-main-card hover-scale">
-          <div class="news-image-container">
-            <img src="/allianz_arena_matchday_1778668623552.png" alt="Allianz Arena" class="news-hero-img" />
+          <div role="button" tabindex="0" onclick={() => openArticle({
+            title: "Preparations for the upcoming match at Allianz Arena",
+            tag: "Matchday",
+            date: "Today • 12:00 PM",
+            image: `${base}/images/Titels/Allianz Arena.avif`,
+            content: "Säbener Straße is fully focused on the massive upcoming match at the Allianz Arena. Vincent Kompany led an intense tactical session this morning, emphasizing high counter-pressing and fluid possession build-up from the back. Neuer participated in full goalkeeper training, showing outstanding reflexes. With a sell-out crowd expected, the atmosphere in Munich is reaching a fever pitch. Kompany stated: 'We respect our opponent, but we are playing on our turf. The Allianz Arena will be a fortress.'"
+          })} class="news-image-container cursor-pointer">
+            <img src="{base}/images/Titels/Allianz Arena.avif" alt="Allianz Arena" class="news-hero-img" />
             <div class="news-overlay">
               <span class="news-tag">Matchday</span>
             </div>
@@ -240,21 +251,43 @@
             <p>The team is in high spirits after the recent training sessions. Fans are expecting a sell-out crowd.</p>
             <div class="news-footer">
               <span>2 hours ago</span>
-              <button class="read-more">Read More <ChevronRight size={14}/></button>
+              <button class="read-more" onclick={() => openArticle({
+                title: "Preparations for the upcoming match at Allianz Arena",
+                tag: "Matchday",
+                date: "Today • 12:00 PM",
+                image: `${base}/images/Titels/Allianz Arena.avif`,
+                content: "Säbener Straße is fully focused on the massive upcoming match at the Allianz Arena. Vincent Kompany led an intense tactical session this morning, emphasizing high counter-pressing and fluid possession build-up from the back. Neuer participated in full goalkeeper training, showing outstanding reflexes. With a sell-out crowd expected, the atmosphere in Munich is reaching a fever pitch. Kompany stated: 'We respect our opponent, but we are playing on our turf. The Allianz Arena will be a fortress.'"
+              })}>Read More <ChevronRight size={14}/></button>
             </div>
           </div>
         </Card>
 
         <div class="mini-news-list">
-          <div class="mini-news-item">
-            <div class="mini-img-box"></div>
+          <div role="button" tabindex="0" class="mini-news-item cursor-pointer" onclick={() => openArticle({
+            title: "Training Report: Focus on tactical awareness",
+            tag: "Training",
+            date: "Today • 10:45 AM",
+            image: `${base}/images/Titels/Training.avif`,
+            content: "Head coach Vincent Kompany dedicated today's entire training curriculum to positional transition drills and defensive solidity. The tactical layout focused heavily on rapid recovery of possession within five seconds of loss. The coaching staff utilized digital tactical boards directly on the pitch, allowing the squad to analyze positioning in real time. Musiala and Kane showed brilliant synergy, scoring several goals in the mock scrimmage. General Director Max Eberl watched from the sidelines, expressing great satisfaction with the high level of focus shown by the entire team."
+          })}>
+            <div class="mini-img-box">
+              <img src="{base}/images/Titels/Training.avif" alt="Training" class="mini-news-img" />
+            </div>
             <div class="mini-content">
               <h4>Training Report: Focus on tactical awareness</h4>
               <span>Today • 10:45 AM</span>
             </div>
           </div>
-          <div class="mini-news-item">
-            <div class="mini-img-box"></div>
+          <div role="button" tabindex="0" class="mini-news-item cursor-pointer" onclick={() => openArticle({
+            title: "Interview: Captain speaks on title ambitions",
+            tag: "Interview",
+            date: "Yesterday • 4:20 PM",
+            image: `${base}/images/players/Manuel Neuer .png`,
+            content: "Our legendary captain Manuel Neuer sat down with the media at Säbener Straße to discuss the team's objectives. Neuer emphasized the squad's hunger to reclaim the league title and push deep into the Champions League knockout stages. 'The quality in this squad is incredible,' Neuer remarked. 'Vincent Kompany has brought a very clear, ambitious vision that everyone has bought into. We are working hard every single day, keeping our feet on the ground but aiming for the absolute top. The leadership team is ready to guide the younger players through the critical upcoming fixtures.'"
+          })}>
+            <div class="mini-img-box">
+              <img src="{base}/images/players/Manuel Neuer .png" alt="Manuel Neuer" class="mini-news-img" />
+            </div>
             <div class="mini-content">
               <h4>Interview: Captain speaks on title ambitions</h4>
               <span>Yesterday • 4:20 PM</span>
@@ -380,6 +413,36 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{/if}
+
+{#if selectedArticle}
+  <div class="modal-overlay animate-fade" onclick={() => selectedArticle = null}>
+    <div class="modal-content animate-in" onclick={(e) => e.stopPropagation()}>
+      <button class="close-btn" onclick={() => selectedArticle = null}>&times;</button>
+      
+      <div class="checkout-header-banner font-bold" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2rem; border-radius: var(--radius-md) var(--radius-md) 0 0;">
+        <div class="comp-badge-shop uppercase font-black text-xs tracking-wider" style="color: var(--primary);">
+          <span>📰 Official Club Announcement</span>
+        </div>
+        <h2 style="color: white; font-size: 1.5rem; margin-top: 0.5rem; font-weight: 850;">{selectedArticle.title}</h2>
+        <p style="opacity: 0.7; font-size: 0.8125rem; margin: 0.25rem 0 0 0;">{selectedArticle.date} • Category: {selectedArticle.tag}</p>
+      </div>
+
+      <div class="modal-body-container" style="padding: 2rem;">
+        <div style="width: 100%; height: 240px; overflow: hidden; border-radius: var(--radius-md); margin-bottom: 1.5rem; border: 1px solid var(--border);">
+          <img src={selectedArticle.image} alt="" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+        
+        <p style="font-size: 0.9375rem; line-height: 1.6; color: var(--text-main); font-weight: 550; white-space: pre-line; margin: 0;">
+          {selectedArticle.content}
+        </p>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+          <Button variant="secondary" onclick={() => selectedArticle = null}>Close Article</Button>
         </div>
       </div>
     </div>
@@ -881,6 +944,13 @@
     background: var(--bg-color);
     border-radius: var(--radius-sm);
     flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .mini-news-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .mini-content h4 {

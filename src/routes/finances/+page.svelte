@@ -41,7 +41,7 @@
       €{finances.balance.toLocaleString('de-DE', { minimumFractionDigits: 2 })}
     </div>
     <div class="balance-footer">
-      <span class="trend positive"><ArrowUpRight size={16} /> +€12.5M sponsorship deal</span>
+      <span class="trend sponsorship-trend"><ArrowUpRight size={16} /> +€12.5M sponsorship deal</span>
     </div>
   </Card>
 
@@ -226,6 +226,14 @@
     border-radius: var(--radius-md);
     display: inline-flex;
     font-weight: 600;
+  }
+
+  .trend.sponsorship-trend {
+    color: #ff4d4d !important;
+    background: rgba(239, 68, 68, 0.15) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    font-weight: 800 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
   /* Quick Stats */

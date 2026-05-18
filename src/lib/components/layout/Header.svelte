@@ -4,6 +4,8 @@
   import { footballData, refreshFootballData } from '$lib/stores/footballStore.svelte.ts';
   import Avatar from '$lib/components/ui/Avatar.svelte';
   import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
 
   let showTeamDropdown = $state(false);
   let showNotifs = $state(false);
@@ -118,7 +120,13 @@
       {/if}
     </div>
     
-    <div class="user-profile interactive-icon" onclick={() => alert('Profile settings coming soon!')}>
+    <div 
+      role="button" 
+      tabindex="0"
+      class="user-profile interactive-icon cursor-pointer" 
+      onclick={() => goto(`${base}/settings?tab=coach`)}
+      onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') goto(`${base}/settings?tab=coach`); }}
+    >
       <Avatar src={userProfile.avatar} alt={userProfile.name} size="sm" />
     </div>
   </div>
