@@ -4,7 +4,7 @@
   import ProgressBar from '$lib/components/ui/ProgressBar.svelte';
   import { events, teamMembers, polls, appState } from '$lib/stores/mockData.svelte';
   import { footballData } from '$lib/stores/footballStore.svelte.ts';
-  import { Calendar, Cake, Megaphone, CheckCircle2, MapPin, ShoppingBag, CreditCard } from 'lucide-svelte';
+  import { Calendar, Cake, Megaphone, CheckCircle2, MapPin, ShoppingBag, X, Image, Clock } from 'lucide-svelte';
   import { getLocalBayernSquad } from '$lib/stores/footballStore.svelte.ts';
   import { base } from '$app/paths';
 
@@ -24,6 +24,86 @@
 
   function formatTime(dateStr: string) {
     return new Date(dateStr).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // ── New Event Modal ──────────────────────────────────────────
+  let showNewEventModal = $state(false);
+  let eventSaved = $state(false);
+  let newEvent = $state({
+    title: '',
+    date: '',
+    startTime: '',
+    endTime: '',
+    location: '',
+    type: 'training',
+    attendanceMode: 'required'
+  });
+
+  function saveNewEvent() {
+    if (!newEvent.title || !newEvent.date) return;
+    const id = 'custom_' + Date.now();
+    events.push({
+      id,
+      teamId: appState.activeTeamId,
+      clubId: 'bayern',
+      title: newEvent.title,
+      date: newEvent.date,
+      startTime: newEvent.startTime || '10:00',
+      endTime: newEvent.endTime || '12:00',
+      location: newEvent.location || 'TBA',
+      type: newEvent.type,
+      status: 'upcoming',
+      responses: { yes: 0, no: 0, pending: 27 },
+      userResponse: 'pending'
+    });
+    eventSaved = true;
+    setTimeout(() => {
+      showNewEventModal = false;
+      eventSaved = false;
+      newEvent = { title: '', date: '', startTime: '', endTime: '', location: '', type: 'training', attendanceMode: 'required' };
+    }, 1800);
+  }
+
+  // ── Announcement Modal ───────────────────────────────────────
+  let showAnnouncementModal = $state(false);
+  let announcementSaved = $state(false);
+  let announcements = $state<any[]>([
+    {
+      id: 'a1',
+      title: 'UCL Semi-Final – Ticket Distribution',
+      body: 'Player-family ticket allocations for the upcoming Champions League semi-final at Allianz Arena are now available. Each squad member receives 4 complimentary tickets. Please register via the club portal before Friday 17:00.',
+      author: 'Max Eberl (General Director)',
+      timestamp: 'Today • 09:15 AM',
+      tag: 'Official'
+    },
+    {
+      id: 'a2',
+      title: 'Updated Training Schedule – Week 21',
+      body: 'Please note the revised training times effective immediately. Tuesday session moved from 10:00 to 08:30 to accommodate media obligations. Attendance is mandatory. Contact the coaching staff for exemptions.',
+      author: 'Vincent Kompany (Head Coach)',
+      timestamp: 'Yesterday • 5:30 PM',
+      tag: 'Training'
+    }
+  ]);
+  let newAnnouncement = $state({ title: '', body: '', tag: 'Official' });
+  let selectedAnnouncement = $state<any>(null);
+
+  function saveAnnouncement() {
+    if (!newAnnouncement.title || !newAnnouncement.body) return;
+    announcements.unshift({
+      id: 'a_' + Date.now(),
+      title: newAnnouncement.title,
+      body: newAnnouncement.body,
+      tag: newAnnouncement.tag,
+      author: 'Vincent Kompany (Head Coach)',
+      timestamp: 'Just now'
+    });
+    announcementSaved = true;
+    setTimeout(() => {
+      showAnnouncementModal = false;
+      announcementSaved = false;
+      newAnnouncement = { title: '', body: '', tag: 'Official' };
+    }, 1800);
   }
 </script>
 
@@ -99,14 +179,29 @@
     <!-- Quick Actions -->
     <Card title="Quick Actions">
       <div class="quick-actions">
-        <Button variant="outline" class="w-full justify-start gap-3 rounded-btn">
+        <Button variant="outline" class="w-full justify-start gap-3 rounded-btn" onclick={() => showNewEventModal = true}>
           <Calendar size={20} class="text-primary" /> New Event
         </Button>
-        <Button variant="outline" class="w-full justify-start gap-3 rounded-btn">
+        <Button variant="outline" class="w-full justify-start gap-3 rounded-btn" onclick={() => showAnnouncementModal = true}>
           <Megaphone size={20} class="text-primary" /> Announcement
         </Button>
       </div>
     </Card>
+
+    <!-- Recent Announcements Widget -->
+    {#if announcements.length > 0}
+    <Card title="📢 Announcements" class="mt-4 hover-scale">
+      <div class="announcement-list">
+        {#each announcements.slice(0, 3) as ann}
+          <div role="button" tabindex="0" class="ann-item" onclick={() => selectedAnnouncement = ann}>
+            <span class="ann-tag {ann.tag === 'Official' ? 'tag-official' : ann.tag === 'Training' ? 'tag-training' : 'tag-default'}">{ann.tag}</span>
+            <p class="ann-title">{ann.title}</p>
+            <span class="ann-time">{ann.timestamp}</span>
+          </div>
+        {/each}
+      </div>
+    </Card>
+    {/if}
 
     <!-- Birthdays -->
     <Card title="Birthdays 🎂" class="mt-4 hover-scale">
@@ -151,6 +246,163 @@
     </a>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════
+     NEW EVENT MODAL
+═══════════════════════════════════════ -->
+{#if showNewEventModal}
+  <div class="modal-overlay animate-fade" role="dialog" aria-modal="true" onclick={() => showNewEventModal = false}>
+    <div class="modal-panel animate-in" onclick={(e) => e.stopPropagation()} role="presentation">
+      <div class="modal-header-strip">
+        <div class="modal-header-icon">📅</div>
+        <div>
+          <h2 class="modal-h">Create New Event</h2>
+          <p class="modal-sub">Schedule a training session, match, or team meeting</p>
+        </div>
+        <button class="modal-close-x" onclick={() => showNewEventModal = false}><X size={20} /></button>
+      </div>
+
+      {#if eventSaved}
+        <div class="success-state">
+          <div class="success-icon">✅</div>
+          <h3>Event Created!</h3>
+          <p>The event has been added to your Calendar and Events page.</p>
+        </div>
+      {:else}
+        <div class="modal-form">
+          <div class="form-group">
+            <label for="ev-title">Event Title <span class="req">*</span></label>
+            <input id="ev-title" type="text" bind:value={newEvent.title} placeholder="e.g. Tactical Training at Säbener Straße" class="form-input" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="ev-date">Date <span class="req">*</span></label>
+              <input id="ev-date" type="date" bind:value={newEvent.date} class="form-input" />
+            </div>
+            <div class="form-group">
+              <label for="ev-type">Event Type</label>
+              <select id="ev-type" bind:value={newEvent.type} class="form-input">
+                <option value="training">⚽ Training</option>
+                <option value="match">🏟️ Match / Game</option>
+                <option value="meeting">📋 Team Meeting</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="ev-start">Start Time</label>
+              <input id="ev-start" type="time" bind:value={newEvent.startTime} class="form-input" />
+            </div>
+            <div class="form-group">
+              <label for="ev-end">End Time</label>
+              <input id="ev-end" type="time" bind:value={newEvent.endTime} class="form-input" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ev-location"><MapPin size={14} /> Location</label>
+            <input id="ev-location" type="text" bind:value={newEvent.location} placeholder="e.g. Allianz Arena, Säbener Straße..." class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label for="ev-attend">Attendance</label>
+            <select id="ev-attend" bind:value={newEvent.attendanceMode} class="form-input">
+              <option value="required">✅ Required – Full Squad</option>
+              <option value="optional">🔵 Optional</option>
+              <option value="first-team">🔴 First Team Only</option>
+            </select>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-cancel" onclick={() => showNewEventModal = false}>Cancel</button>
+            <button class="btn-save" onclick={saveNewEvent} disabled={!newEvent.title || !newEvent.date}>
+              📅 Save Event
+            </button>
+          </div>
+        </div>
+      {/if}
+    </div>
+  </div>
+{/if}
+
+<!-- ═══════════════════════════════════════
+     ANNOUNCEMENT MODAL
+═══════════════════════════════════════ -->
+{#if showAnnouncementModal}
+  <div class="modal-overlay animate-fade" role="dialog" aria-modal="true" onclick={() => showAnnouncementModal = false}>
+    <div class="modal-panel animate-in" onclick={(e) => e.stopPropagation()} role="presentation">
+      <div class="modal-header-strip">
+        <div class="modal-header-icon">📢</div>
+        <div>
+          <h2 class="modal-h">Post Announcement</h2>
+          <p class="modal-sub">Publish a club news update to the squad</p>
+        </div>
+        <button class="modal-close-x" onclick={() => showAnnouncementModal = false}><X size={20} /></button>
+      </div>
+
+      {#if announcementSaved}
+        <div class="success-state">
+          <div class="success-icon">📣</div>
+          <h3>Announcement Published!</h3>
+          <p>Your message has been distributed to all squad members.</p>
+        </div>
+      {:else}
+        <div class="modal-form">
+          <div class="form-group">
+            <label for="ann-title">Title <span class="req">*</span></label>
+            <input id="ann-title" type="text" bind:value={newAnnouncement.title} placeholder="e.g. Match Day Protocol – vs. Dortmund" class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label for="ann-body">Message Body <span class="req">*</span></label>
+            <textarea id="ann-body" bind:value={newAnnouncement.body} rows="5" placeholder="Write your announcement details here..." class="form-input form-textarea"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="ann-tag">Category</label>
+            <select id="ann-tag" bind:value={newAnnouncement.tag} class="form-input">
+              <option value="Official">🔴 Official Club Notice</option>
+              <option value="Training">⚽ Training Update</option>
+              <option value="Match">🏆 Match Info</option>
+              <option value="General">📌 General</option>
+            </select>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-cancel" onclick={() => showAnnouncementModal = false}>Cancel</button>
+            <button class="btn-save" onclick={saveAnnouncement} disabled={!newAnnouncement.title || !newAnnouncement.body}>
+              📢 Publish Announcement
+            </button>
+          </div>
+        </div>
+      {/if}
+    </div>
+  </div>
+{/if}
+
+<!-- Announcement Detail Viewer -->
+{#if selectedAnnouncement}
+  <div class="modal-overlay animate-fade" role="dialog" aria-modal="true" onclick={() => selectedAnnouncement = null}>
+    <div class="modal-panel animate-in ann-detail-panel" onclick={(e) => e.stopPropagation()} role="presentation">
+      <button class="modal-close-x" onclick={() => selectedAnnouncement = null}><X size={20} /></button>
+      <div class="ann-detail-header">
+        <span class="ann-tag tag-{selectedAnnouncement.tag === 'Official' ? 'official' : selectedAnnouncement.tag === 'Training' ? 'training' : 'default'}">{selectedAnnouncement.tag}</span>
+        <h2>{selectedAnnouncement.title}</h2>
+        <div class="ann-meta">
+          <Clock size={14} /> {selectedAnnouncement.timestamp} &nbsp;•&nbsp; {selectedAnnouncement.author}
+        </div>
+      </div>
+      <div class="ann-detail-body">
+        <p>{selectedAnnouncement.body}</p>
+      </div>
+      <div class="ann-detail-footer">
+        <span class="fc-badge">FC Bayern München – Official Internal Communication</span>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <style>
   .dashboard-grid {
@@ -893,6 +1145,298 @@
       opacity: 1;
       transform: scale(1) translateY(0);
     }
+  }
+
+  /* ── New modal panel (event + announcement) ─────────────── */
+  .modal-panel {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    overflow: hidden;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .ann-detail-panel {
+    max-width: 640px;
+    padding: 0;
+  }
+
+  .modal-header-strip {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.75rem 1.75rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(220,38,38,0.03) 0%, transparent 100%);
+  }
+
+  .modal-header-icon {
+    font-size: 2rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .modal-h {
+    margin: 0 0 0.25rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+  }
+
+  .modal-sub {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .modal-close-x {
+    margin-left: auto;
+    flex-shrink: 0;
+    background: rgba(15,23,42,0.05);
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+  }
+  .modal-close-x:hover {
+    background: rgba(220,38,38,0.1);
+    color: var(--primary);
+  }
+
+  .modal-form {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .req {
+    color: var(--primary);
+  }
+
+  .form-input {
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: white;
+    color: var(--text-main);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    font-family: inherit;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(220,38,38,0.1);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.25rem;
+  }
+
+  .btn-cancel {
+    flex: 1;
+    padding: 0.75rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+  .btn-cancel:hover { background: #f8fafc; color: var(--text-main); }
+
+  .btn-save {
+    flex: 2;
+    padding: 0.75rem;
+    background: var(--primary);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 800;
+    font-size: 0.9375rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 4px 14px rgba(220,38,38,0.25);
+    font-family: inherit;
+  }
+  .btn-save:hover:not(:disabled) { background: #b91c1c; transform: translateY(-1px); }
+  .btn-save:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .success-state {
+    padding: 3rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .success-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    animation: successPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  @keyframes successPop {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .success-state h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem;
+    color: var(--text-main);
+  }
+  .success-state p {
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    margin: 0;
+  }
+
+  /* ── Announcement widget card ──────────────────────────── */
+  .announcement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ann-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.875rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s ease;
+    border: 1px solid transparent;
+  }
+  .ann-item:hover {
+    background: rgba(220,38,38,0.03);
+    border-color: rgba(220,38,38,0.1);
+  }
+
+  .ann-tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    width: fit-content;
+    margin-bottom: 0.125rem;
+  }
+  .tag-official { background: rgba(220,38,38,0.1); color: var(--primary); }
+  .tag-training { background: rgba(5,150,105,0.1); color: #059669; }
+  .tag-default  { background: rgba(15,23,42,0.08); color: var(--text-muted); }
+
+  .ann-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .ann-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* ── Announcement detail panel ─────────────────────────── */
+  .ann-detail-header {
+    padding: 2.5rem 2rem 1.5rem;
+    background: linear-gradient(180deg, rgba(15,23,42,0.02) 0%, transparent 100%);
+    border-bottom: 1px dashed var(--border);
+  }
+  .ann-detail-header h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0.5rem 0 0.75rem;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+  .ann-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .ann-detail-body {
+    padding: 2rem;
+  }
+  .ann-detail-body p {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--text-main);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .ann-detail-footer {
+    padding: 1.25rem 2rem;
+    border-top: 1px solid var(--border);
+    background: rgba(15,23,42,0.01);
+  }
+
+  .fc-badge {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    opacity: 0.7;
   }
 </style>
 

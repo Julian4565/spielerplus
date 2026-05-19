@@ -29,42 +29,83 @@
     selectedArticle = article;
   }
 
+  let matchTab = $state<'overview'|'lineups'|'analysis'>('overview');
+
   function openMatchDetails(match: any) {
-    const isFinished = match.status === 'FINISHED' || match.status === 'finished' || (match.score && match.score.fullTime && match.score.fullTime.home !== null);
-    
-    // Generate realistic, consistent match stats
+    const isFinished = match.status === 'FINISHED' || match.status === 'finished' ||
+      (match.score && match.score.fullTime && match.score.fullTime.home !== null);
+
+    const isBayernHome = match.homeTeam?.name?.includes('Bayern') ||
+                         match.homeTeam?.shortName?.includes('Bayern');
+
+    const winPctHome = isBayernHome ? 62 : 38;
+    const winPctAway = 100 - winPctHome - 18;
+
     const stats = isFinished ? {
-      possessionHome: 58,
-      possessionAway: 42,
-      shotsHome: 16,
-      shotsAway: 9,
-      shotsOnTargetHome: 7,
-      shotsOnTargetAway: 3,
-      foulsHome: 8,
-      foulsAway: 12,
-      cornersHome: 6,
-      cornersAway: 4,
+      possessionHome: isBayernHome ? 58 : 42,
+      possessionAway: isBayernHome ? 42 : 58,
+      shotsHome: isBayernHome ? 16 : 9,
+      shotsAway: isBayernHome ? 9 : 16,
+      shotsOnTargetHome: isBayernHome ? 7 : 3,
+      shotsOnTargetAway: isBayernHome ? 3 : 7,
+      foulsHome: 8, foulsAway: 12,
+      cornersHome: isBayernHome ? 7 : 4,
+      cornersAway: isBayernHome ? 4 : 7,
+      xGHome: isBayernHome ? 2.34 : 1.12,
+      xGAway: isBayernHome ? 1.12 : 2.34,
     } : {
-      possessionHome: 50,
-      possessionAway: 50,
-      shotsHome: 0,
-      shotsAway: 0,
-      shotsOnTargetHome: 0,
-      shotsOnTargetAway: 0,
-      foulsHome: 0,
-      foulsAway: 0,
-      cornersHome: 0,
-      cornersAway: 0,
+      possessionHome: isBayernHome ? 56 : 44,
+      possessionAway: isBayernHome ? 44 : 56,
+      shotsHome: 0, shotsAway: 0, shotsOnTargetHome: 0, shotsOnTargetAway: 0,
+      foulsHome: 0, foulsAway: 0, cornersHome: 0, cornersAway: 0,
+      xGHome: isBayernHome ? 1.95 : 1.20,
+      xGAway: isBayernHome ? 1.20 : 1.95,
     };
-    
+
+    // Generate realistic opponent lineup based on team name
+    const opponentName = isBayernHome ? match.awayTeam?.name : match.homeTeam?.name;
+    const opponentLineups: Record<string, string[]> = {
+      'Real Madrid': ['Courtois (GK)', 'Carvajal', 'Rüdiger', 'Militão', 'Mendy', 'Valverde', 'Tchouaméni', 'Bellingham', 'Rodrygo', 'Mbappé', 'Vinícius Jr.'],
+      'Dortmund':    ['Kobel (GK)', 'Ryerson', 'Hummels', 'Schlotterbeck', 'Maatsen', 'Can', 'Nmecha', 'Sabitzer', 'Adeyemi', 'Sancho', 'Füllkrug'],
+      'Arsenal':     ['Raya (GK)', 'Ben White', 'Saliba', 'Gabriel', 'Zinchenko', 'Partey', 'Rice', 'Ødegaard', 'Saka', 'Havertz', 'Martinelli'],
+      'default':     ['GK', 'RB', 'CB', 'CB', 'LB', 'DM', 'CM', 'AM', 'RW', 'ST', 'LW'],
+    };
+    const awayLineup = opponentLineups[
+      Object.keys(opponentLineups).find(k => opponentName?.includes(k)) || 'default'
+    ];
+
+    const bayernLineup = isBayernHome
+      ? ['M. Neuer (GK)', 'J. Kimmich', 'D. Upamecano', 'M. Min-jae', 'A. Davies', 'A. Pavlović', 'L. Goretzka', 'L. Sané', 'J. Musiala', 'S. Gnabry', 'H. Kane']
+      : ['M. Neuer (GK)', 'J. Kimmich', 'D. Upamecano', 'M. Min-jae', 'A. Davies', 'K. De Bruyne', 'L. Goretzka', 'J. Musiala', 'L. Sané', 'H. Kane', 'S. Gnabry'];
+
     selectedMatch = {
       ...match,
       stats,
+      isFinished,
+      isBayernHome,
+      winPct: { home: winPctHome, draw: 18, away: winPctAway },
+      predictedScore: isBayernHome ? '2 – 1' : '1 – 2',
+      goalscorers: [
+        { name: 'Harry Kane', prob: 68, team: 'FCB' },
+        { name: 'Jamal Musiala', prob: 54, team: 'FCB' },
+        { name: 'Leroy Sané', prob: 41, team: 'FCB' },
+      ],
+      recentForm: {
+        home: ['W','W','D','W','W'],
+        away: ['L','W','D','L','W'],
+      },
+      tactics: {
+        homeFormation: '4-2-3-1',
+        awayFormation: '4-3-3',
+        homeStyle: 'High Press, Possession Build-Up, Vertical Transitions',
+        awayStyle: 'Counter-Attack, Deep Block, Pacey Wingers',
+      },
       lineups: {
-        home: ['M. Neuer (GK)', 'J. Kimmich', 'D. Upamecano', 'M. Min-jae', 'A. Davies', 'A. Pavlović', 'L. Goretzka', 'L. Sané', 'J. Musiala', 'S. Gnabry', 'H. Kane'],
-        away: ['Courtois (GK)', 'Carvajal', 'Rüdiger', 'Militão', 'Mendy', 'Valverde', 'Tchouaméni', 'Bellingham', 'Rodrygo', 'Mbappé', 'Vinícius Jr.']
+        home: isBayernHome ? bayernLineup : awayLineup,
+        away: isBayernHome ? awayLineup : bayernLineup,
       }
     };
+    matchTab = 'overview';
   }
 </script>
 
@@ -300,124 +341,236 @@
 </div>
 
 {#if selectedMatch}
-  <div class="modal-overlay animate-fade" onclick={() => selectedMatch = null}>
-    <div class="modal-content animate-in" onclick={(e) => e.stopPropagation()}>
-      <button class="close-btn" onclick={() => selectedMatch = null}>&times;</button>
+  <div class="modal-overlay animate-fade" role="dialog" aria-modal="true" onclick={() => selectedMatch = null}>
+    <div class="match-analysis-panel animate-in" onclick={(e) => e.stopPropagation()} role="presentation">
 
-      <div class="modal-header-banner">
-        <div class="competition-badge">
-          <img src={selectedMatch.competition.emblem} alt="" class="modal-comp-logo" />
+      <!-- Header: Competition + Teams -->
+      <div class="ma-header">
+        <button class="ma-close" onclick={() => selectedMatch = null}>✕</button>
+        <div class="ma-comp">
+          <img src={selectedMatch.competition.emblem} alt="" class="ma-comp-logo" />
           <span>{selectedMatch.competition.name}</span>
+          {#if selectedMatch.isFinished}
+            <span class="ma-status-badge finished">Full Time</span>
+          {:else}
+            <span class="ma-status-badge upcoming">Upcoming</span>
+          {/if}
         </div>
-        
-        <div class="teams-versus-container">
-          <div class="modal-team">
-            <img src={selectedMatch.homeTeam.crest} alt="" class="modal-team-crest" />
-            <span class="modal-team-name">{selectedMatch.homeTeam.shortName || selectedMatch.homeTeam.name}</span>
+
+        <div class="ma-teams">
+          <div class="ma-team">
+            <img src={selectedMatch.homeTeam.crest} alt="" class="ma-crest" />
+            <span class="ma-team-name">{selectedMatch.homeTeam.shortName || selectedMatch.homeTeam.name}</span>
+            <span class="ma-formation">{selectedMatch.tactics.homeFormation}</span>
           </div>
 
-          <div class="modal-score-vs">
-            {#if selectedMatch.score && selectedMatch.score.fullTime && selectedMatch.score.fullTime.home !== null}
-              <div class="modal-score">{selectedMatch.score.fullTime.home} - {selectedMatch.score.fullTime.away}</div>
-              <div class="modal-match-status">Full Time</div>
+          <div class="ma-center">
+            {#if selectedMatch.isFinished && selectedMatch.score?.fullTime?.home !== null}
+              <div class="ma-score">{selectedMatch.score.fullTime.home} – {selectedMatch.score.fullTime.away}</div>
+              <div class="ma-kickoff">FT</div>
             {:else}
-              <div class="modal-vs-badge">VS</div>
-              <div class="modal-match-status">Scheduled</div>
+              <div class="ma-predicted-score">{selectedMatch.predictedScore}</div>
+              <div class="ma-kickoff">{new Date(selectedMatch.utcDate).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})} KO</div>
+              <div class="ma-kickoff">{new Date(selectedMatch.utcDate).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
             {/if}
           </div>
 
-          <div class="modal-team">
-            <img src={selectedMatch.awayTeam.crest} alt="" class="modal-team-crest" />
-            <span class="modal-team-name">{selectedMatch.awayTeam.shortName || selectedMatch.awayTeam.name}</span>
+          <div class="ma-team">
+            <img src={selectedMatch.awayTeam.crest} alt="" class="ma-crest" />
+            <span class="ma-team-name">{selectedMatch.awayTeam.shortName || selectedMatch.awayTeam.name}</span>
+            <span class="ma-formation">{selectedMatch.tactics.awayFormation}</span>
           </div>
         </div>
 
-        <div class="modal-matchday-details">
-          <div class="detail-item">
-            <Calendar size={16} />
-            <span>{formatDate(selectedMatch.utcDate)}</span>
-          </div>
-          <div class="detail-item">
-            <MapPin size={16} />
-            <span>{selectedMatch.venue || 'TBA'}</span>
-          </div>
+        <div class="ma-venue-row">
+          <MapPin size={13} /> {selectedMatch.venue || 'TBA'} &nbsp;·&nbsp;
+          <Calendar size={13} /> {formatDate(selectedMatch.utcDate)}
         </div>
       </div>
 
-      <div class="modal-body-container">
-        <div class="tabs-control">
-          <h3 class="tab-title active">Match Center</h3>
-        </div>
+      <!-- Tabs -->
+      <div class="ma-tabs">
+        <button class="ma-tab {matchTab === 'overview' ? 'active' : ''}" onclick={() => matchTab = 'overview'}>Overview</button>
+        <button class="ma-tab {matchTab === 'lineups'  ? 'active' : ''}" onclick={() => matchTab = 'lineups'}>Lineups</button>
+        <button class="ma-tab {matchTab === 'analysis' ? 'active' : ''}" onclick={() => matchTab = 'analysis'}>Analysis</button>
+      </div>
 
-        <div class="modal-grid-content">
-          <!-- Statistics -->
-          <div class="modal-card-widget">
-            <h4>📊 Match Statistics</h4>
-            
-            <div class="stat-progress-item">
-              <div class="stat-lbls">
-                <span>{selectedMatch.stats.possessionHome}%</span>
-                <span class="stat-title">Possession</span>
-                <span>{selectedMatch.stats.possessionAway}%</span>
+      <div class="ma-body">
+
+        <!-- ── OVERVIEW TAB ─────────────────────────────── -->
+        {#if matchTab === 'overview'}
+          <!-- Win Probability -->
+          {#if !selectedMatch.isFinished}
+          <div class="ma-widget">
+            <h4 class="ma-widget-title">🏆 Win Probability</h4>
+            <div class="win-prob-bar">
+              <div class="wp-home" style="width:{selectedMatch.winPct.home}%">{selectedMatch.winPct.home}%</div>
+              <div class="wp-draw" style="width:{selectedMatch.winPct.draw}%">{selectedMatch.winPct.draw}%</div>
+              <div class="wp-away" style="width:{selectedMatch.winPct.away}%">{selectedMatch.winPct.away}%</div>
+            </div>
+            <div class="wp-labels">
+              <span>{selectedMatch.homeTeam.shortName || selectedMatch.homeTeam.name}</span>
+              <span>Draw</span>
+              <span>{selectedMatch.awayTeam.shortName || selectedMatch.awayTeam.name}</span>
+            </div>
+            <div class="predicted-result-strip">
+              <span class="pr-label">Predicted Result</span>
+              <span class="pr-score">{selectedMatch.predictedScore}</span>
+            </div>
+          </div>
+          {/if}
+
+          <!-- xG / Key Stats -->
+          <div class="ma-widget">
+            <h4 class="ma-widget-title">📊 {selectedMatch.isFinished ? 'Match Statistics' : 'Expected Statistics (xG)'}</h4>
+            <div class="dual-stat-row">
+              <span class="ds-val home">{selectedMatch.stats.xGHome.toFixed(2)}</span>
+              <span class="ds-label">xGoals (xG)</span>
+              <span class="ds-val away">{selectedMatch.stats.xGAway.toFixed(2)}</span>
+            </div>
+            <div class="dual-stat-row">
+              <span class="ds-val home">{selectedMatch.stats.possessionHome}%</span>
+              <div class="ds-bar-wrap">
+                <div class="ds-bar-label">Possession</div>
+                <div class="ds-dual-bar">
+                  <div class="ds-bar-left"  style="width:{selectedMatch.stats.possessionHome}%"></div>
+                  <div class="ds-bar-right" style="width:{selectedMatch.stats.possessionAway}%"></div>
+                </div>
               </div>
-              <div class="dual-progress-bar">
-                <div class="progress-left" style="width: {selectedMatch.stats.possessionHome}%"></div>
-                <div class="progress-right" style="width: {selectedMatch.stats.possessionAway}%"></div>
-              </div>
+              <span class="ds-val away">{selectedMatch.stats.possessionAway}%</span>
             </div>
-
-            <div class="simple-stat-row">
-              <span class="stat-val">{selectedMatch.stats.shotsHome}</span>
-              <span class="stat-name">Total Shots</span>
-              <span class="stat-val">{selectedMatch.stats.shotsAway}</span>
+            <div class="dual-stat-row">
+              <span class="ds-val home">{selectedMatch.stats.shotsHome}</span>
+              <span class="ds-label">Total Shots</span>
+              <span class="ds-val away">{selectedMatch.stats.shotsAway}</span>
             </div>
-
-            <div class="simple-stat-row">
-              <span class="stat-val">{selectedMatch.stats.shotsOnTargetHome}</span>
-              <span class="stat-name">Shots on Target</span>
-              <span class="stat-val">{selectedMatch.stats.shotsOnTargetAway}</span>
+            <div class="dual-stat-row">
+              <span class="ds-val home">{selectedMatch.stats.shotsOnTargetHome}</span>
+              <span class="ds-label">Shots on Target</span>
+              <span class="ds-val away">{selectedMatch.stats.shotsOnTargetAway}</span>
             </div>
-
-            <div class="simple-stat-row">
-              <span class="stat-val">{selectedMatch.stats.cornersHome}</span>
-              <span class="stat-name">Corners</span>
-              <span class="stat-val">{selectedMatch.stats.cornersAway}</span>
-            </div>
-
-            <div class="simple-stat-row">
-              <span class="stat-val">{selectedMatch.stats.foulsHome}</span>
-              <span class="stat-name">Fouls</span>
-              <span class="stat-val">{selectedMatch.stats.foulsAway}</span>
+            <div class="dual-stat-row">
+              <span class="ds-val home">{selectedMatch.stats.cornersHome}</span>
+              <span class="ds-label">Corners</span>
+              <span class="ds-val away">{selectedMatch.stats.cornersAway}</span>
             </div>
           </div>
 
-          <!-- Lineups -->
-          <div class="modal-card-widget">
-            <h4>📋 Tactical Lineups</h4>
-            <div class="lineups-dual-list">
-              <div class="lineup-side home-side">
-                <h5>{selectedMatch.homeTeam.shortName || selectedMatch.homeTeam.name}</h5>
-                <ul>
-                  {#each selectedMatch.lineups.home as player}
-                    <li>{player}</li>
-                  {/each}
-                </ul>
+          <!-- Recent Form -->
+          <div class="ma-widget">
+            <h4 class="ma-widget-title">📈 Recent Form (Last 5)</h4>
+            <div class="form-guide-row">
+              <span class="form-team-lbl">{selectedMatch.homeTeam.shortName || selectedMatch.homeTeam.name}</span>
+              <div class="form-bubbles">
+                {#each selectedMatch.recentForm.home as r}
+                  <span class="form-dot {r === 'W' ? 'fw' : r === 'D' ? 'fd' : 'fl'}">{r}</span>
+                {/each}
               </div>
-              <div class="lineup-side away-side">
-                <h5>{selectedMatch.awayTeam.shortName || selectedMatch.awayTeam.name}</h5>
-                <ul>
-                  {#each selectedMatch.lineups.away as player}
-                    <li>{player}</li>
-                  {/each}
-                </ul>
+            </div>
+            <div class="form-guide-row">
+              <span class="form-team-lbl">{selectedMatch.awayTeam.shortName || selectedMatch.awayTeam.name}</span>
+              <div class="form-bubbles">
+                {#each selectedMatch.recentForm.away as r}
+                  <span class="form-dot {r === 'W' ? 'fw' : r === 'D' ? 'fd' : 'fl'}">{r}</span>
+                {/each}
               </div>
             </div>
           </div>
-        </div>
+
+        <!-- ── LINEUPS TAB ───────────────────────────────── -->
+        {:else if matchTab === 'lineups'}
+          <div class="ma-widget">
+            <div class="lineups-grid">
+              <div class="lineup-col">
+                <h5 class="lineup-heading home-heading">{selectedMatch.homeTeam.shortName || selectedMatch.homeTeam.name}</h5>
+                <div class="lineup-badge">{selectedMatch.tactics.homeFormation}</div>
+                <ol class="lineup-list">
+                  {#each selectedMatch.lineups.home as player, i}
+                    <li class="lineup-player {i === 0 ? 'gk-row' : ''}">
+                      <span class="pl-num">{i + 1}</span>
+                      <span class="pl-name">{player}</span>
+                    </li>
+                  {/each}
+                </ol>
+              </div>
+              <div class="lineup-divider"></div>
+              <div class="lineup-col">
+                <h5 class="lineup-heading away-heading">{selectedMatch.awayTeam.shortName || selectedMatch.awayTeam.name}</h5>
+                <div class="lineup-badge">{selectedMatch.tactics.awayFormation}</div>
+                <ol class="lineup-list">
+                  {#each selectedMatch.lineups.away as player, i}
+                    <li class="lineup-player {i === 0 ? 'gk-row' : ''}">
+                      <span class="pl-num">{i + 1}</span>
+                      <span class="pl-name">{player}</span>
+                    </li>
+                  {/each}
+                </ol>
+              </div>
+            </div>
+          </div>
+
+        <!-- ── ANALYSIS TAB ──────────────────────────────── -->
+        {:else if matchTab === 'analysis'}
+          <!-- Goalscorer Predictions -->
+          <div class="ma-widget">
+            <h4 class="ma-widget-title">⚽ Anytime Goalscorer Predictions</h4>
+            {#each selectedMatch.goalscorers as gs}
+              <div class="goalscorer-row">
+                <span class="gs-name">{gs.name}</span>
+                <div class="gs-bar-track">
+                  <div class="gs-bar-fill" style="width:{gs.prob}%"></div>
+                </div>
+                <span class="gs-prob">{gs.prob}%</span>
+              </div>
+            {/each}
+          </div>
+
+          <!-- Tactical Overview -->
+          <div class="ma-widget">
+            <h4 class="ma-widget-title">🧠 Tactical Preview</h4>
+            <div class="tactic-block home-tactic">
+              <div class="tactic-team">{selectedMatch.homeTeam.shortName || selectedMatch.homeTeam.name} · {selectedMatch.tactics.homeFormation}</div>
+              <p class="tactic-desc">{selectedMatch.tactics.homeStyle}</p>
+            </div>
+            <div class="tactic-block away-tactic">
+              <div class="tactic-team">{selectedMatch.awayTeam.shortName || selectedMatch.awayTeam.name} · {selectedMatch.tactics.awayFormation}</div>
+              <p class="tactic-desc">{selectedMatch.tactics.awayStyle}</p>
+            </div>
+          </div>
+
+          <!-- Key Matchup -->
+          <div class="ma-widget key-matchup">
+            <h4 class="ma-widget-title">⚡ Key Player Matchup</h4>
+            <div class="matchup-row">
+              <div class="matchup-player">
+                <span class="mp-name">Harry Kane</span>
+                <span class="mp-stat">12G / 6A this season</span>
+              </div>
+              <div class="matchup-vs">VS</div>
+              <div class="matchup-player away">
+                <span class="mp-name">Opponent CB</span>
+                <span class="mp-stat">Aerial duels: 68%</span>
+              </div>
+            </div>
+            <div class="matchup-row">
+              <div class="matchup-player">
+                <span class="mp-name">Jamal Musiala</span>
+                <span class="mp-stat">87 dribbles completed</span>
+              </div>
+              <div class="matchup-vs">VS</div>
+              <div class="matchup-player away">
+                <span class="mp-name">Opp. RB</span>
+                <span class="mp-stat">1.8 fouls / game</span>
+              </div>
+            </div>
+          </div>
+        {/if}
+
       </div>
     </div>
   </div>
 {/if}
+
 
 {#if selectedArticle}
   <div class="modal-overlay animate-fade" onclick={() => selectedArticle = null}>
@@ -1340,13 +1493,205 @@
     }
 
     @keyframes modalFadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.95) translateY(15px);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
+      from { opacity: 0; transform: scale(0.95) translateY(15px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
     }
+
+    /* ── Match Analysis Panel ─────────────────────────────── */
+    .match-analysis-panel {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 600px;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 30px 60px -10px rgba(0,0,0,0.6);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .ma-header {
+      background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 1.5rem 1.75rem 1.25rem;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .ma-close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: rgba(255,255,255,0.1); border: none;
+      color: white; width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: 0.875rem; display: flex;
+      align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .ma-close:hover { background: rgba(220,38,38,0.5); }
+
+    .ma-comp {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; opacity: 0.75; margin-bottom: 1rem;
+    }
+    .ma-comp-logo { width: 18px; height: 18px; object-fit: contain; }
+
+    .ma-status-badge {
+      padding: 0.15rem 0.6rem; border-radius: 9999px;
+      font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.06em; margin-left: auto;
+    }
+    .ma-status-badge.finished  { background: rgba(5,150,105,0.25); color: #34d399; }
+    .ma-status-badge.upcoming  { background: rgba(220,38,38,0.25); color: #fca5a5; }
+
+    .ma-teams {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center; gap: 1rem; margin-bottom: 1rem;
+    }
+
+    .ma-team {
+      display: flex; flex-direction: column; align-items: center; gap: 0.375rem;
+    }
+    .ma-crest { width: 54px; height: 54px; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); }
+    .ma-team-name { font-size: 0.9375rem; font-weight: 800; text-align: center; }
+    .ma-formation { font-size: 0.7rem; opacity: 0.55; font-weight: 700; }
+
+    .ma-center { text-align: center; }
+    .ma-score {
+      font-size: 2.75rem; font-weight: 900; letter-spacing: -0.04em;
+      line-height: 1; text-shadow: 0 2px 12px rgba(220,38,38,0.4);
+      color: #ff4d4d;
+    }
+    .ma-predicted-score {
+      font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em;
+      opacity: 0.65; font-style: italic;
+    }
+    .ma-kickoff { font-size: 0.7375rem; opacity: 0.6; font-weight: 600; margin-top: 0.2rem; }
+
+    .ma-venue-row {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.75rem; opacity: 0.55; font-weight: 500;
+    }
+
+    /* Tabs */
+    .ma-tabs {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .ma-tab {
+      padding: 0.875rem; background: none; border: none;
+      font-size: 0.875rem; font-weight: 700; color: var(--text-muted);
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+    }
+    .ma-tab:hover { color: var(--text-main); background: rgba(15,23,42,0.03); }
+    .ma-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    /* Body */
+    .ma-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; overflow-y: auto; }
+
+    .ma-widget {
+      background: white; border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .ma-widget-title {
+      font-size: 0.9375rem; font-weight: 800; margin: 0 0 1rem;
+      color: var(--text-main); letter-spacing: -0.01em;
+    }
+
+    /* Win probability bar */
+    .win-prob-bar {
+      display: flex; height: 36px; border-radius: var(--radius-sm);
+      overflow: hidden; gap: 2px;
+    }
+    .wp-home { background: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: white; transition: width 0.6s ease; }
+    .wp-draw { background: #94a3b8; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: white; }
+    .wp-away { background: #1e293b; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: white; }
+    .wp-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-top: 0.5rem; }
+
+    .predicted-result-strip {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 1rem; padding: 0.625rem 0.875rem;
+      background: rgba(220,38,38,0.04); border: 1px dashed rgba(220,38,38,0.2);
+      border-radius: var(--radius-sm);
+    }
+    .pr-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+    .pr-score { font-size: 1.25rem; font-weight: 900; color: var(--primary); }
+
+    /* Dual stats */
+    .dual-stat-row {
+      display: grid; grid-template-columns: 60px 1fr 60px;
+      align-items: center; gap: 0.5rem; padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(15,23,42,0.04);
+    }
+    .dual-stat-row:last-child { border-bottom: none; }
+    .ds-val { font-weight: 800; font-size: 1rem; }
+    .ds-val.home { text-align: right; color: #dc2626; }
+    .ds-val.away { text-align: left; color: #1e293b; }
+    .ds-label { text-align: center; font-size: 0.8125rem; color: var(--text-muted); font-weight: 600; }
+    .ds-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+    .ds-bar-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+    .ds-dual-bar { display: flex; height: 6px; border-radius: 9999px; overflow: hidden; width: 100%; background: #e2e8f0; gap: 1px; }
+    .ds-bar-left  { background: #dc2626; border-radius: 9999px 0 0 9999px; transition: width 0.5s; }
+    .ds-bar-right { background: #1e293b; border-radius: 0 9999px 9999px 0; transition: width 0.5s; }
+
+    /* Form guide */
+    .form-guide-row { display: flex; align-items: center; gap: 0.875rem; padding: 0.5rem 0; }
+    .form-guide-row:not(:last-child) { border-bottom: 1px solid var(--border); }
+    .form-team-lbl { font-size: 0.8125rem; font-weight: 700; color: var(--text-muted); width: 60px; flex-shrink: 0; }
+    .form-bubbles { display: flex; gap: 0.375rem; }
+    .form-dot {
+      width: 28px; height: 28px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-size: 0.7rem;
+      font-weight: 900; color: white;
+    }
+    .fw { background: #059669; }
+    .fd { background: #94a3b8; }
+    .fl { background: #dc2626; }
+
+    /* Lineups */
+    .lineups-grid { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 1rem; }
+    .lineup-divider { background: var(--border); }
+    .lineup-col { display: flex; flex-direction: column; gap: 0.5rem; }
+    .lineup-heading { font-size: 0.9375rem; font-weight: 800; margin: 0; }
+    .home-heading { color: #dc2626; }
+    .away-heading { color: #1e293b; }
+    .lineup-badge {
+      display: inline-block; padding: 0.2rem 0.6rem; border-radius: 9999px;
+      background: rgba(15,23,42,0.06); font-size: 0.7rem; font-weight: 800;
+      color: var(--text-muted); width: fit-content;
+    }
+    .lineup-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.125rem; }
+    .lineup-player { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.4rem; border-radius: 4px; transition: background 0.1s; }
+    .lineup-player:hover { background: rgba(15,23,42,0.03); }
+    .gk-row { background: rgba(220,38,38,0.04) !important; font-weight: 700 !important; }
+    .pl-num { font-size: 0.6875rem; color: var(--text-muted); font-weight: 700; width: 16px; }
+    .pl-name { font-size: 0.8125rem; font-weight: 600; color: var(--text-main); }
+
+    /* Goalscorer bars */
+    .goalscorer-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+    .goalscorer-row:last-child { border-bottom: none; }
+    .gs-name { font-size: 0.875rem; font-weight: 700; width: 130px; flex-shrink: 0; }
+    .gs-bar-track { flex: 1; height: 8px; background: #f1f5f9; border-radius: 9999px; overflow: hidden; }
+    .gs-bar-fill { height: 100%; background: linear-gradient(90deg, #dc2626, #ff6b6b); border-radius: 9999px; transition: width 0.6s ease; }
+    .gs-prob { font-size: 0.875rem; font-weight: 800; color: var(--primary); width: 38px; text-align: right; }
+
+    /* Tactics */
+    .tactic-block { padding: 0.875rem; border-radius: var(--radius-sm); margin-bottom: 0.75rem; }
+    .home-tactic { background: rgba(220,38,38,0.04); border-left: 3px solid #dc2626; }
+    .away-tactic { background: rgba(15,23,42,0.04); border-left: 3px solid #1e293b; }
+    .tactic-team { font-size: 0.8125rem; font-weight: 800; margin-bottom: 0.375rem; color: var(--text-main); }
+    .tactic-desc { font-size: 0.8125rem; color: var(--text-muted); font-weight: 500; margin: 0; line-height: 1.5; }
+
+    /* Key matchup */
+    .matchup-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+    .matchup-row:last-child { border-bottom: none; }
+    .matchup-player { flex: 1; display: flex; flex-direction: column; gap: 0.2rem; }
+    .matchup-player.away { text-align: right; align-items: flex-end; }
+    .matchup-vs { font-size: 0.7rem; font-weight: 900; color: var(--text-muted); background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .mp-name { font-size: 0.875rem; font-weight: 800; color: var(--text-main); }
+    .mp-stat { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
   </style>
