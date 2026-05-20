@@ -78,11 +78,28 @@
       ? ['M. Neuer (GK)', 'J. Kimmich', 'D. Upamecano', 'M. Min-jae', 'A. Davies', 'A. Pavlović', 'L. Goretzka', 'L. Sané', 'J. Musiala', 'S. Gnabry', 'H. Kane']
       : ['M. Neuer (GK)', 'J. Kimmich', 'D. Upamecano', 'M. Min-jae', 'A. Davies', 'K. De Bruyne', 'L. Goretzka', 'J. Musiala', 'L. Sané', 'H. Kane', 'S. Gnabry'];
 
+    let stageInfo = '';
+    let aggregateInfo = '';
+
+    if (match.competition?.name?.includes('Champions League') || match.competition?.code === 'CL') {
+      if (match.id === 102) {
+        stageInfo = 'Champions League · Semi-Final';
+        aggregateInfo = 'Aggregate: 0 - 0 (TBD)';
+      } else if (match.id === 92) {
+        stageInfo = 'Champions League · Quarter-Final';
+        aggregateInfo = 'Aggregate: Arsenal 0 - 2 Bayern (FT)';
+      } else if (match.id === 105) {
+        stageInfo = 'Champions League · League Phase';
+      }
+    }
+
     selectedMatch = {
       ...match,
       stats,
       isFinished,
       isBayernHome,
+      stageInfo,
+      aggregateInfo,
       winPct: { home: winPctHome, draw: 18, away: winPctAway },
       predictedScore: isBayernHome ? '2 – 1' : '1 – 2',
       goalscorers: [
@@ -349,11 +366,14 @@
         <button class="ma-close" onclick={() => selectedMatch = null}>✕</button>
         <div class="ma-comp">
           <img src={selectedMatch.competition.emblem} alt="" class="ma-comp-logo" />
-          <span>{selectedMatch.competition.name}</span>
+          <span>{selectedMatch.stageInfo || selectedMatch.competition.name}</span>
           {#if selectedMatch.isFinished}
             <span class="ma-status-badge finished">Full Time</span>
           {:else}
             <span class="ma-status-badge upcoming">Upcoming</span>
+          {/if}
+          {#if selectedMatch.aggregateInfo}
+            <span class="ma-aggregate-badge">{selectedMatch.aggregateInfo}</span>
           {/if}
         </div>
 
@@ -1544,6 +1564,14 @@
     }
     .ma-status-badge.finished  { background: rgba(5,150,105,0.25); color: #34d399; }
     .ma-status-badge.upcoming  { background: rgba(220,38,38,0.25); color: #fca5a5; }
+
+    .ma-aggregate-badge {
+      padding: 0.15rem 0.6rem; border-radius: 9999px;
+      font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.06em; margin-left: 0.5rem;
+      background: rgba(59, 130, 246, 0.25); color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
 
     .ma-teams {
       display: grid; grid-template-columns: 1fr auto 1fr;

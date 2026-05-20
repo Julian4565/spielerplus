@@ -9,6 +9,7 @@ export const footballData = $state({
     bundesliga: null as any,
     cl: null as any
   },
+  clKnockout: null as any,
   liveMatches: [] as any[],
   squad: [] as any[],
   loading: false,
@@ -40,7 +41,17 @@ const getMockBundesliga = () => ({
       { position: 5, team: { id: 10, name: 'VfB Stuttgart', shortName: 'Stuttgart', crest: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/VfB_Stuttgart_1893_Logo.svg' }, playedGames: 28, won: 16, draw: 6, lost: 6, goalDifference: 20, points: 54 },
       { position: 6, team: { id: 9, name: 'Eintracht Frankfurt', shortName: 'Frankfurt', crest: `${base}/images/Titels/Frankfurt .png` }, playedGames: 28, won: 14, draw: 8, lost: 6, goalDifference: 12, points: 50 },
       { position: 7, team: { id: 17, name: 'SC Freiburg', shortName: 'Freiburg', crest: `${base}/images/Titels/Feiburg .png` }, playedGames: 28, won: 12, draw: 7, lost: 9, goalDifference: 5, points: 43 },
-      { position: 8, team: { id: 24, name: 'VfL Bochum', shortName: 'Bochum', crest: `${base}/images/Titels/Bochum .png` }, playedGames: 28, won: 9, draw: 8, lost: 11, goalDifference: -12, points: 35 }
+      { position: 8, team: { id: 18, name: 'VfL Wolfsburg', shortName: 'Wolfsburg', crest: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Logo-VfL-Wolfsburg.svg' }, playedGames: 28, won: 11, draw: 8, lost: 9, goalDifference: 3, points: 41 },
+      { position: 9, team: { id: 12, name: 'SV Werder Bremen', shortName: 'Bremen', crest: 'https://upload.wikimedia.org/wikipedia/commons/b/be/SV-Werder-Bremen-Logo.svg' }, playedGames: 28, won: 11, draw: 7, lost: 10, goalDifference: 0, points: 40 },
+      { position: 10, team: { id: 19, name: '1. FC Union Berlin', shortName: 'Union Berlin', crest: 'https://upload.wikimedia.org/wikipedia/commons/4/44/1._FC_Union_Berlin_Logo.svg' }, playedGames: 28, won: 10, draw: 9, lost: 9, goalDifference: -2, points: 39 },
+      { position: 11, team: { id: 3, name: 'Borussia Mönchengladbach', shortName: 'Gladbach', crest: 'https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_Mönchengladbach_logo.svg' }, playedGames: 28, won: 10, draw: 8, lost: 10, goalDifference: -4, points: 38 },
+      { position: 12, team: { id: 15, name: 'FC Augsburg', shortName: 'Augsburg', crest: 'https://upload.wikimedia.org/wikipedia/en/c/c5/FC_Augsburg_logo.svg' }, playedGames: 28, won: 10, draw: 7, lost: 11, goalDifference: -6, points: 37 },
+      { position: 13, team: { id: 16, name: '1. FSV Mainz 05', shortName: 'Mainz', crest: 'https://upload.wikimedia.org/wikipedia/commons/9/9e/Logo_Mainz_05.svg' }, playedGames: 28, won: 10, draw: 6, lost: 12, goalDifference: -8, points: 36 },
+      { position: 14, team: { id: 20, name: 'TSG 1899 Hoffenheim', shortName: 'Hoffenheim', crest: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Logo_TSG_Hoffenheim.svg' }, playedGames: 28, won: 9, draw: 8, lost: 11, goalDifference: -7, points: 35 },
+      { position: 15, team: { id: 24, name: 'VfL Bochum', shortName: 'Bochum', crest: `${base}/images/Titels/Bochum .png` }, playedGames: 28, won: 9, draw: 5, lost: 14, goalDifference: -15, points: 32 },
+      { position: 16, team: { id: 21, name: 'FC Heidenheim', shortName: 'Heidenheim', crest: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/1._FC_Heidenheim_1846.svg' }, playedGames: 28, won: 7, draw: 8, lost: 13, goalDifference: -18, points: 29 },
+      { position: 17, team: { id: 22, name: 'FC St. Pauli', shortName: 'St. Pauli', crest: 'https://upload.wikimedia.org/wikipedia/en/8/81/FC_St._Pauli_logo_%282018%29.svg' }, playedGames: 28, won: 6, draw: 6, lost: 16, goalDifference: -24, points: 24 },
+      { position: 18, team: { id: 23, name: 'Holstein Kiel', shortName: 'Kiel', crest: 'https://upload.wikimedia.org/wikipedia/en/5/56/Holstein_Kiel_Logo.svg' }, playedGames: 28, won: 4, draw: 7, lost: 17, goalDifference: -30, points: 19 }
     ]
   }]
 });
@@ -50,13 +61,61 @@ const getMockCL = () => ({
     group: 'LEAGUE_PHASE',
     table: [
       { position: 1, team: { id: 5, name: 'FC Bayern München', shortName: 'Bayern', crest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg' }, playedGames: 8, won: 6, draw: 1, lost: 1, goalDifference: 12, points: 19 },
-      { position: 2, team: { id: 86, name: 'Real Madrid CF', shortName: 'Real Madrid', crest: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg' }, playedGames: 8, won: 6, draw: 0, lost: 2, goalDifference: 10, points: 18 },
-      { position: 3, team: { id: 65, name: 'Manchester City FC', shortName: 'Man City', crest: 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg' }, playedGames: 8, won: 5, draw: 2, lost: 1, goalDifference: 11, points: 17 },
-      { position: 4, team: { id: 11, name: 'Arsenal FC', shortName: 'Arsenal', crest: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg' }, playedGames: 8, won: 5, draw: 1, lost: 2, goalDifference: 8, points: 16 },
-      { position: 5, team: { id: 524, name: 'Paris Saint-Germain FC', shortName: 'PSG', crest: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg' }, playedGames: 8, won: 4, draw: 3, lost: 1, goalDifference: 6, points: 15 },
-      { position: 6, team: { id: 64, name: 'Liverpool FC', shortName: 'Liverpool', crest: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg' }, playedGames: 8, won: 4, draw: 2, lost: 2, goalDifference: 5, points: 14 }
+      { position: 2, team: { id: 64, name: 'Liverpool FC', shortName: 'Liverpool', crest: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg' }, playedGames: 8, won: 6, draw: 1, lost: 1, goalDifference: 11, points: 19 },
+      { position: 3, team: { id: 86, name: 'Real Madrid CF', shortName: 'Real Madrid', crest: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg' }, playedGames: 8, won: 6, draw: 0, lost: 2, goalDifference: 10, points: 18 },
+      { position: 4, team: { id: 65, name: 'Manchester City FC', shortName: 'Man City', crest: 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg' }, playedGames: 8, won: 5, draw: 2, lost: 1, goalDifference: 11, points: 17 },
+      { position: 5, team: { id: 11, name: 'Arsenal FC', shortName: 'Arsenal', crest: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg' }, playedGames: 8, won: 5, draw: 1, lost: 2, goalDifference: 8, points: 16 },
+      { position: 6, team: { id: 81, name: 'FC Barcelona', shortName: 'Barcelona', crest: 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg' }, playedGames: 8, won: 5, draw: 1, lost: 2, goalDifference: 9, points: 16 },
+      { position: 7, team: { id: 524, name: 'Paris Saint-Germain FC', shortName: 'PSG', crest: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg' }, playedGames: 8, won: 4, draw: 3, lost: 1, goalDifference: 6, points: 15 },
+      { position: 8, team: { id: 108, name: 'FC Internazionale Milano', shortName: 'Inter', crest: 'https://upload.wikimedia.org/wikipedia/commons/0/05/FC_Internazionale_Milano_2021.svg' }, playedGames: 8, won: 4, draw: 2, lost: 2, goalDifference: 5, points: 14 },
+      { position: 9, team: { id: 4, name: 'Borussia Dortmund', shortName: 'Dortmund', crest: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg' }, playedGames: 8, won: 4, draw: 2, lost: 2, goalDifference: 4, points: 14 },
+      { position: 10, team: { id: 109, name: 'Juventus FC', shortName: 'Juventus', crest: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Juventus_FC_-_pictogram.svg' }, playedGames: 8, won: 4, draw: 1, lost: 3, goalDifference: 3, points: 13 },
+      { position: 11, team: { id: 113, name: 'SSC Napoli', shortName: 'Napoli', crest: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/SSC_Neapel.svg' }, playedGames: 8, won: 4, draw: 1, lost: 3, goalDifference: 2, points: 13 },
+      { position: 12, team: { id: 73, name: 'Tottenham Hotspur FC', shortName: 'Tottenham', crest: 'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg' }, playedGames: 8, won: 4, draw: 0, lost: 4, goalDifference: 1, points: 12 },
+      { position: 13, team: { id: 78, name: 'Club Atlético de Madrid', shortName: 'Atlético', crest: 'https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg' }, playedGames: 8, won: 3, draw: 3, lost: 2, goalDifference: 3, points: 12 },
+      { position: 14, team: { id: 110, name: 'AC Milan', shortName: 'Milan', crest: 'https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg' }, playedGames: 8, won: 3, draw: 2, lost: 3, goalDifference: 1, points: 11 },
+      { position: 15, team: { id: 2, name: 'Bayer 04 Leverkusen', shortName: 'Leverkusen', crest: 'https://upload.wikimedia.org/wikipedia/en/5/59/Bayer_04_Leverkusen_logo.svg' }, playedGames: 8, won: 3, draw: 2, lost: 3, goalDifference: 0, points: 11 },
+      { position: 16, team: { id: 610, name: 'SL Benfica', shortName: 'Benfica', crest: 'https://upload.wikimedia.org/wikipedia/en/a/a2/SL_Benfica_logo.svg' }, playedGames: 8, won: 3, draw: 1, lost: 4, goalDifference: -1, points: 10 },
+      { position: 17, team: { id: 503, name: 'FC Porto', shortName: 'Porto', crest: 'https://upload.wikimedia.org/wikipedia/en/f/f1/FC_Porto.svg' }, playedGames: 8, won: 3, draw: 1, lost: 4, goalDifference: -2, points: 10 },
+      { position: 18, team: { id: 721, name: 'RB Leipzig', shortName: 'RB Leipzig', crest: 'https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg' }, playedGames: 8, won: 3, draw: 0, lost: 5, goalDifference: -3, points: 9 },
+      { position: 19, team: { id: 338, name: 'Sporting CP', shortName: 'Sporting', crest: 'https://upload.wikimedia.org/wikipedia/en/e/e1/Sporting_Clube_de_Portugal_%28Logo%29.svg' }, playedGames: 8, won: 2, draw: 3, lost: 3, goalDifference: -2, points: 9 },
+      { position: 20, team: { id: 10, name: 'VfB Stuttgart', shortName: 'Stuttgart', crest: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/VfB_Stuttgart_1893_Logo.svg' }, playedGames: 8, won: 2, draw: 2, lost: 4, goalDifference: -4, points: 8 },
+      { position: 21, team: { id: 674, name: 'PSV Eindhoven', shortName: 'PSV', crest: 'https://upload.wikimedia.org/wikipedia/en/0/05/PSV_Eindhoven.svg' }, playedGames: 8, won: 2, draw: 2, lost: 4, goalDifference: -5, points: 8 },
+      { position: 22, team: { id: 732, name: 'Celtic FC', shortName: 'Celtic', crest: 'https://upload.wikimedia.org/wikipedia/en/3/35/Celtic_FC.svg' }, playedGames: 8, won: 2, draw: 1, lost: 5, goalDifference: -6, points: 7 },
+      { position: 23, team: { id: 559, name: 'FC Salzburg', shortName: 'Salzburg', crest: 'https://upload.wikimedia.org/wikipedia/en/7/77/FC_Red_Bull_Salzburg_logo.svg' }, playedGames: 8, won: 1, draw: 2, lost: 5, goalDifference: -8, points: 5 },
+      { position: 24, team: { id: 1871, name: 'BSC Young Boys', shortName: 'Young Boys', crest: 'https://upload.wikimedia.org/wikipedia/en/6/6b/BSC_Young_Boys_logo.svg' }, playedGames: 8, won: 0, draw: 2, lost: 6, goalDifference: -14, points: 2 }
     ]
   }]
+});
+
+const getMockCLKnockout = () => ({
+  roundOf16: [
+    { home: 'Bayern', homeShort: 'FCB', homeCrest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg', away: 'Benfica', awayShort: 'SLB', awayCrest: 'https://upload.wikimedia.org/wikipedia/en/a/a2/SL_Benfica_logo.svg', scoreHome: 4, scoreAway: 1, agg: '5-2' },
+    { home: 'Liverpool', homeShort: 'LIV', homeCrest: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg', away: 'Sporting', awayShort: 'SCP', awayCrest: 'https://upload.wikimedia.org/wikipedia/en/e/e1/Sporting_Clube_de_Portugal_%28Logo%29.svg', scoreHome: 3, scoreAway: 0, agg: '5-1' },
+    { home: 'Real Madrid', homeShort: 'RMA', homeCrest: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg', away: 'Porto', awayShort: 'FCP', awayCrest: 'https://upload.wikimedia.org/wikipedia/en/f/f1/FC_Porto.svg', scoreHome: 2, scoreAway: 1, agg: '4-2' },
+    { home: 'Man City', homeShort: 'MCI', homeCrest: 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg', away: 'Napoli', awayShort: 'NAP', awayCrest: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/SSC_Neapel.svg', scoreHome: 2, scoreAway: 0, agg: '3-1' },
+    { home: 'Arsenal', homeShort: 'ARS', homeCrest: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg', away: 'Milan', awayShort: 'MIL', awayCrest: 'https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg', scoreHome: 3, scoreAway: 1, agg: '4-2' },
+    { home: 'Barcelona', homeShort: 'BAR', homeCrest: 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg', away: 'Leverkusen', awayShort: 'LEV', awayCrest: 'https://upload.wikimedia.org/wikipedia/en/5/59/Bayer_04_Leverkusen_logo.svg', scoreHome: 2, scoreAway: 2, agg: '3-3 (p)' },
+    { home: 'PSG', homeShort: 'PSG', homeCrest: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg', away: 'RB Leipzig', awayShort: 'RBL', awayCrest: 'https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg', scoreHome: 3, scoreAway: 0, agg: '4-1' },
+    { home: 'Inter', homeShort: 'INT', homeCrest: 'https://upload.wikimedia.org/wikipedia/commons/0/05/FC_Internazionale_Milano_2021.svg', away: 'Dortmund', awayShort: 'BVB', awayCrest: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg', scoreHome: 1, scoreAway: 0, agg: '2-1' }
+  ],
+  quarterFinals: [
+    { home: 'Bayern', homeShort: 'FCB', homeCrest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg', away: 'Arsenal', awayShort: 'ARS', awayCrest: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg', scoreHome: 3, scoreAway: 1, agg: '4-2' },
+    { home: 'Real Madrid', homeShort: 'RMA', homeCrest: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg', away: 'Liverpool', awayShort: 'LIV', awayCrest: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg', scoreHome: 2, scoreAway: 1, agg: '3-2' },
+    { home: 'Man City', homeShort: 'MCI', homeCrest: 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg', away: 'PSG', awayShort: 'PSG', awayCrest: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg', scoreHome: 1, scoreAway: 2, agg: '2-3' },
+    { home: 'Barcelona', homeShort: 'BAR', homeCrest: 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg', away: 'Inter', awayShort: 'INT', awayCrest: 'https://upload.wikimedia.org/wikipedia/commons/0/05/FC_Internazionale_Milano_2021.svg', scoreHome: 3, scoreAway: 2, agg: '4-3' }
+  ],
+  semiFinals: [
+    { home: 'Bayern', homeShort: 'FCB', homeCrest: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg', away: 'Real Madrid', awayShort: 'RMA', awayCrest: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg', scoreHome: null, scoreAway: null, agg: 'TBD' },
+    { home: 'PSG', homeShort: 'PSG', homeCrest: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg', away: 'Barcelona', awayShort: 'BAR', awayCrest: 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg', scoreHome: null, scoreAway: null, agg: 'TBD' }
+  ],
+  final: {
+    home: 'TBD', homeShort: '???', homeCrest: '',
+    away: 'TBD', awayShort: '???', awayCrest: '',
+    venue: 'Allianz Arena, Munich',
+    date: 'May 31, 2026',
+    scoreHome: null, scoreAway: null
+  }
 });
 
 const getMockSquad = () => [
@@ -182,6 +241,9 @@ export async function refreshFootballData() {
     } else {
       footballData.standings.cl = getMockCL();
     }
+
+    // Always load knockout bracket (mock data only)
+    footballData.clKnockout = getMockCLKnockout();
 
     if (results[4].status === 'fulfilled' && results[4].value) {
       footballData.squad = results[4].value.squad || [];

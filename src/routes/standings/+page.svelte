@@ -18,12 +18,13 @@
     if (activeTable === 'bundesliga') {
       return footballData.standings.bundesliga?.standings?.[0]?.table || [];
     } else {
-      // CL is usually a list of groups
-      return footballData.standings.cl?.standings || [];
+      // CL new format: single league phase table
+      return footballData.standings.cl?.standings?.[0]?.table || [];
     }
   }
 
   const clubDetailsMap: Record<string, any> = {
+    // ── Bundesliga ──
     'FC Bayern München': { founded: 1900, stadium: 'Allianz Arena', capacity: '75,024', manager: 'Vincent Kompany', league: 'Bundesliga', color: '#dc2626' },
     'Bayern': { founded: 1900, stadium: 'Allianz Arena', capacity: '75,024', manager: 'Vincent Kompany', league: 'Bundesliga', color: '#dc2626' },
     'Bayer 04 Leverkusen': { founded: 1904, stadium: 'BayArena', capacity: '30,210', manager: 'Xabi Alonso', league: 'Bundesliga', color: '#e11d48' },
@@ -37,8 +38,29 @@
     'Frankfurt': { founded: 1899, stadium: 'Deutsche Bank Park', capacity: '58,000', manager: 'Dino Toppmöller', league: 'Bundesliga', color: '#1e293b' },
     'SC Freiburg': { founded: 1904, stadium: 'Europa-Park Stadion', capacity: '34,700', manager: 'Julian Schuster', league: 'Bundesliga', color: '#dc2626' },
     'Freiburg': { founded: 1904, stadium: 'Europa-Park Stadion', capacity: '34,700', manager: 'Julian Schuster', league: 'Bundesliga', color: '#dc2626' },
+    'VfL Wolfsburg': { founded: 1945, stadium: 'Volkswagen Arena', capacity: '30,000', manager: 'Ralph Hasenhüttl', league: 'Bundesliga', color: '#16a34a' },
+    'Wolfsburg': { founded: 1945, stadium: 'Volkswagen Arena', capacity: '30,000', manager: 'Ralph Hasenhüttl', league: 'Bundesliga', color: '#16a34a' },
+    'SV Werder Bremen': { founded: 1899, stadium: 'Weserstadion', capacity: '42,100', manager: 'Ole Werner', league: 'Bundesliga', color: '#059669' },
+    'Bremen': { founded: 1899, stadium: 'Weserstadion', capacity: '42,100', manager: 'Ole Werner', league: 'Bundesliga', color: '#059669' },
     '1. FC Union Berlin': { founded: 1966, stadium: 'An der Alten Försterei', capacity: '22,012', manager: 'Bo Svensson', league: 'Bundesliga', color: '#dc2626' },
     'Union Berlin': { founded: 1966, stadium: 'An der Alten Försterei', capacity: '22,012', manager: 'Bo Svensson', league: 'Bundesliga', color: '#dc2626' },
+    'Borussia Mönchengladbach': { founded: 1900, stadium: 'Borussia-Park', capacity: '54,042', manager: 'Gerardo Seoane', league: 'Bundesliga', color: '#1e293b' },
+    'Gladbach': { founded: 1900, stadium: 'Borussia-Park', capacity: '54,042', manager: 'Gerardo Seoane', league: 'Bundesliga', color: '#1e293b' },
+    'FC Augsburg': { founded: 1907, stadium: 'WWK Arena', capacity: '30,660', manager: 'Jess Thorup', league: 'Bundesliga', color: '#dc2626' },
+    'Augsburg': { founded: 1907, stadium: 'WWK Arena', capacity: '30,660', manager: 'Jess Thorup', league: 'Bundesliga', color: '#dc2626' },
+    '1. FSV Mainz 05': { founded: 1905, stadium: 'Mewa Arena', capacity: '33,305', manager: 'Bo Henriksen', league: 'Bundesliga', color: '#dc2626' },
+    'Mainz': { founded: 1905, stadium: 'Mewa Arena', capacity: '33,305', manager: 'Bo Henriksen', league: 'Bundesliga', color: '#dc2626' },
+    'TSG 1899 Hoffenheim': { founded: 1899, stadium: 'PreZero Arena', capacity: '30,150', manager: 'Pellegrino Matarazzo', league: 'Bundesliga', color: '#2563eb' },
+    'Hoffenheim': { founded: 1899, stadium: 'PreZero Arena', capacity: '30,150', manager: 'Pellegrino Matarazzo', league: 'Bundesliga', color: '#2563eb' },
+    'VfL Bochum': { founded: 1848, stadium: 'Vonovia Ruhrstadion', capacity: '27,599', manager: 'Dieter Hecking', league: 'Bundesliga', color: '#2563eb' },
+    'Bochum': { founded: 1848, stadium: 'Vonovia Ruhrstadion', capacity: '27,599', manager: 'Dieter Hecking', league: 'Bundesliga', color: '#2563eb' },
+    'FC Heidenheim': { founded: 1846, stadium: 'Voith-Arena', capacity: '15,000', manager: 'Frank Schmidt', league: 'Bundesliga', color: '#dc2626' },
+    'Heidenheim': { founded: 1846, stadium: 'Voith-Arena', capacity: '15,000', manager: 'Frank Schmidt', league: 'Bundesliga', color: '#dc2626' },
+    'FC St. Pauli': { founded: 1910, stadium: 'Millerntor-Stadion', capacity: '29,546', manager: 'Alexander Blessin', league: 'Bundesliga', color: '#78350f' },
+    'St. Pauli': { founded: 1910, stadium: 'Millerntor-Stadion', capacity: '29,546', manager: 'Alexander Blessin', league: 'Bundesliga', color: '#78350f' },
+    'Holstein Kiel': { founded: 1900, stadium: 'Holstein-Stadion', capacity: '15,034', manager: 'Marcel Rapp', league: 'Bundesliga', color: '#1e40af' },
+    'Kiel': { founded: 1900, stadium: 'Holstein-Stadion', capacity: '15,034', manager: 'Marcel Rapp', league: 'Bundesliga', color: '#1e40af' },
+    // ── Champions League ──
     'Real Madrid CF': { founded: 1902, stadium: 'Santiago Bernabéu', capacity: '81,044', manager: 'Carlo Ancelotti', league: 'La Liga', color: '#3b82f6' },
     'Real Madrid': { founded: 1902, stadium: 'Santiago Bernabéu', capacity: '81,044', manager: 'Carlo Ancelotti', league: 'La Liga', color: '#3b82f6' },
     'Manchester City FC': { founded: 1880, stadium: 'Etihad Stadium', capacity: '53,400', manager: 'Pep Guardiola', league: 'Premier League', color: '#0ea5e9' },
@@ -48,7 +70,35 @@
     'Paris Saint-Germain FC': { founded: 1970, stadium: 'Parc des Princes', capacity: '47,929', manager: 'Luis Enrique', league: 'Ligue 1', color: '#1e3a8a' },
     'PSG': { founded: 1970, stadium: 'Parc des Princes', capacity: '47,929', manager: 'Luis Enrique', league: 'Ligue 1', color: '#1e3a8a' },
     'Liverpool FC': { founded: 1892, stadium: 'Anfield', capacity: '61,276', manager: 'Arne Slot', league: 'Premier League', color: '#b91c1c' },
-    'Liverpool': { founded: 1892, stadium: 'Anfield', capacity: '61,276', manager: 'Arne Slot', league: 'Premier League', color: '#b91c1c' }
+    'Liverpool': { founded: 1892, stadium: 'Anfield', capacity: '61,276', manager: 'Arne Slot', league: 'Premier League', color: '#b91c1c' },
+    'FC Barcelona': { founded: 1899, stadium: 'Spotify Camp Nou', capacity: '99,354', manager: 'Hansi Flick', league: 'La Liga', color: '#1e3a8a' },
+    'Barcelona': { founded: 1899, stadium: 'Spotify Camp Nou', capacity: '99,354', manager: 'Hansi Flick', league: 'La Liga', color: '#1e3a8a' },
+    'FC Internazionale Milano': { founded: 1908, stadium: 'San Siro', capacity: '75,923', manager: 'Simone Inzaghi', league: 'Serie A', color: '#1e3a8a' },
+    'Inter': { founded: 1908, stadium: 'San Siro', capacity: '75,923', manager: 'Simone Inzaghi', league: 'Serie A', color: '#1e3a8a' },
+    'Juventus FC': { founded: 1897, stadium: 'Allianz Stadium', capacity: '41,507', manager: 'Thiago Motta', league: 'Serie A', color: '#1e293b' },
+    'Juventus': { founded: 1897, stadium: 'Allianz Stadium', capacity: '41,507', manager: 'Thiago Motta', league: 'Serie A', color: '#1e293b' },
+    'SSC Napoli': { founded: 1926, stadium: 'Stadio Diego Armando Maradona', capacity: '54,726', manager: 'Antonio Conte', league: 'Serie A', color: '#0ea5e9' },
+    'Napoli': { founded: 1926, stadium: 'Stadio Diego Armando Maradona', capacity: '54,726', manager: 'Antonio Conte', league: 'Serie A', color: '#0ea5e9' },
+    'Tottenham Hotspur FC': { founded: 1882, stadium: 'Tottenham Hotspur Stadium', capacity: '62,850', manager: 'Ange Postecoglou', league: 'Premier League', color: '#1e293b' },
+    'Tottenham': { founded: 1882, stadium: 'Tottenham Hotspur Stadium', capacity: '62,850', manager: 'Ange Postecoglou', league: 'Premier League', color: '#1e293b' },
+    'Club Atlético de Madrid': { founded: 1903, stadium: 'Metropolitano', capacity: '68,456', manager: 'Diego Simeone', league: 'La Liga', color: '#dc2626' },
+    'Atlético': { founded: 1903, stadium: 'Metropolitano', capacity: '68,456', manager: 'Diego Simeone', league: 'La Liga', color: '#dc2626' },
+    'AC Milan': { founded: 1899, stadium: 'San Siro', capacity: '75,923', manager: 'Paulo Fonseca', league: 'Serie A', color: '#dc2626' },
+    'Milan': { founded: 1899, stadium: 'San Siro', capacity: '75,923', manager: 'Paulo Fonseca', league: 'Serie A', color: '#dc2626' },
+    'SL Benfica': { founded: 1904, stadium: 'Estádio da Luz', capacity: '64,642', manager: 'Bruno Lage', league: 'Liga Portugal', color: '#dc2626' },
+    'Benfica': { founded: 1904, stadium: 'Estádio da Luz', capacity: '64,642', manager: 'Bruno Lage', league: 'Liga Portugal', color: '#dc2626' },
+    'FC Porto': { founded: 1893, stadium: 'Estádio do Dragão', capacity: '50,033', manager: 'Vítor Bruno', league: 'Liga Portugal', color: '#1e3a8a' },
+    'Porto': { founded: 1893, stadium: 'Estádio do Dragão', capacity: '50,033', manager: 'Vítor Bruno', league: 'Liga Portugal', color: '#1e3a8a' },
+    'Sporting CP': { founded: 1906, stadium: 'Estádio José Alvalade', capacity: '50,095', manager: 'Rúben Amorim', league: 'Liga Portugal', color: '#16a34a' },
+    'Sporting': { founded: 1906, stadium: 'Estádio José Alvalade', capacity: '50,095', manager: 'Rúben Amorim', league: 'Liga Portugal', color: '#16a34a' },
+    'PSV Eindhoven': { founded: 1913, stadium: 'Philips Stadion', capacity: '35,000', manager: 'Peter Bosz', league: 'Eredivisie', color: '#dc2626' },
+    'PSV': { founded: 1913, stadium: 'Philips Stadion', capacity: '35,000', manager: 'Peter Bosz', league: 'Eredivisie', color: '#dc2626' },
+    'Celtic FC': { founded: 1887, stadium: 'Celtic Park', capacity: '60,411', manager: 'Brendan Rodgers', league: 'Scottish Premiership', color: '#16a34a' },
+    'Celtic': { founded: 1887, stadium: 'Celtic Park', capacity: '60,411', manager: 'Brendan Rodgers', league: 'Scottish Premiership', color: '#16a34a' },
+    'FC Salzburg': { founded: 1933, stadium: 'Red Bull Arena', capacity: '30,188', manager: 'Pepijn Lijnders', league: 'Austrian Bundesliga', color: '#dc2626' },
+    'Salzburg': { founded: 1933, stadium: 'Red Bull Arena', capacity: '30,188', manager: 'Pepijn Lijnders', league: 'Austrian Bundesliga', color: '#dc2626' },
+    'BSC Young Boys': { founded: 1898, stadium: 'Wankdorf', capacity: '31,120', manager: 'Patrick Rahmen', league: 'Swiss Super League', color: '#facc15' },
+    'Young Boys': { founded: 1898, stadium: 'Wankdorf', capacity: '31,120', manager: 'Patrick Rahmen', league: 'Swiss Super League', color: '#facc15' }
   };
 
   let selectedClub = $state<any>(null);
@@ -68,6 +118,74 @@
       ...details
     };
     selectedClubStats = stats;
+  }
+
+  const r16OrderedIndices = [0, 4, 2, 1, 3, 6, 5, 7];
+
+  function isWinner(teamName: string, round: string, idx: number) {
+    if (round === 'roundOf16') {
+      const matchWinners: Record<number, string> = {
+        0: 'Bayern',
+        1: 'Liverpool',
+        2: 'Real Madrid',
+        3: 'Man City',
+        4: 'Arsenal',
+        5: 'Barcelona',
+        6: 'PSG',
+        7: 'Inter'
+      };
+      return matchWinners[idx] === teamName;
+    }
+    if (round === 'quarterFinals') {
+      const matchWinners: Record<number, string> = {
+        0: 'Bayern',
+        1: 'Real Madrid',
+        2: 'PSG',
+        3: 'Barcelona'
+      };
+      return matchWinners[idx] === teamName;
+    }
+    return false;
+  }
+
+  function isLoser(teamName: string, round: string, idx: number) {
+    if (round === 'roundOf16') {
+      const matchLosers: Record<number, string> = {
+        0: 'Benfica',
+        1: 'Sporting',
+        2: 'Porto',
+        3: 'Napoli',
+        4: 'Milan',
+        5: 'Leverkusen',
+        6: 'RB Leipzig',
+        7: 'Dortmund'
+      };
+      return matchLosers[idx] === teamName;
+    }
+    if (round === 'quarterFinals') {
+      const matchLosers: Record<number, string> = {
+        0: 'Arsenal',
+        1: 'Liverpool',
+        2: 'Man City',
+        3: 'Inter'
+      };
+      return matchLosers[idx] === teamName;
+    }
+    return false;
+  }
+
+  function getRowZoneClass(position: number) {
+    if (activeTable === 'bundesliga') {
+      if (position <= 4) return 'zone-ucl';
+      if (position <= 6) return 'zone-uel';
+      if (position === 7) return 'zone-uecl';
+      if (position === 16) return 'zone-playoff';
+      if (position >= 17) return 'zone-relegation';
+    } else {
+      if (position <= 8) return 'zone-cl-direct';
+      if (position <= 24) return 'zone-cl-playoff';
+    }
+    return '';
   }
 </script>
 
@@ -115,66 +233,165 @@
   </header>
 
   <div class="standings-container">
-    {#if activeTable === 'bundesliga'}
-      <Card class="table-card">
-        <div class="table-wrapper">
-          <table class="standings-table">
-            <thead>
-              <tr>
-                <th class="pos">Pos</th>
-                <th class="team">Club</th>
-                <th class="stat">P</th>
-                <th class="stat">W</th>
-                <th class="stat">D</th>
-                <th class="stat">L</th>
-                <th class="stat">GD</th>
-                <th class="stat pts">Pts</th>
+    <Card class="table-card">
+      <div class="table-wrapper">
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th class="pos">Pos</th>
+              <th class="team">Club</th>
+              <th class="stat">P</th>
+              <th class="stat">W</th>
+              <th class="stat">D</th>
+              <th class="stat">L</th>
+              <th class="stat">GD</th>
+              <th class="stat pts">Pts</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each getTableData() as row}
+              <tr class:highlight={row.team.id === BAYERN_ID} class="clickable-row {getRowZoneClass(row.position)}" onclick={() => openClubDetails(row.team, row)}>
+                <td class="pos">{row.position}</td>
+                <td class="team">
+                  <div class="team-info">
+                    <img src={row.team.crest} alt="" class="crest" />
+                    <span class="team-name">{row.team.shortName || row.team.name}</span>
+                  </div>
+                </td>
+                <td class="stat">{row.playedGames}</td>
+                <td class="stat">{row.won}</td>
+                <td class="stat">{row.draw}</td>
+                <td class="stat">{row.lost}</td>
+                <td class="stat">{row.goalDifference}</td>
+                <td class="stat pts">{row.points}</td>
               </tr>
-            </thead>
-            <tbody>
-              {#each getTableData() as row}
-                <tr class:highlight={row.team.id === BAYERN_ID} class="clickable-row" onclick={() => openClubDetails(row.team, row)}>
-                  <td class="pos">{row.position}</td>
-                  <td class="team">
-                    <div class="team-info">
-                      <img src={row.team.crest} alt="" class="crest" />
-                      <span class="team-name">{row.team.shortName || row.team.name}</span>
-                    </div>
-                  </td>
-                  <td class="stat">{row.playedGames}</td>
-                  <td class="stat">{row.won}</td>
-                  <td class="stat">{row.draw}</td>
-                  <td class="stat">{row.lost}</td>
-                  <td class="stat">{row.goalDifference}</td>
-                  <td class="stat pts">{row.points}</td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    </Card>
+
+    {#if activeTable === 'cl'}
+      <!-- Knockout Bracket Section -->
+      <div class="knockout-section animate-in">
+        <div class="knockout-header">
+          <Trophy size={22} class="knockout-icon" />
+          <h2>Knockout Stage</h2>
         </div>
-      </Card>
-    {:else}
-      <!-- CL Groups -->
-      <div class="groups-grid">
-        {#each getTableData() as group}
-          <Card class="group-card">
-            <h3 class="group-name">{group.group.replace('_', ' ')}</h3>
-            <table class="group-table">
-              <tbody>
-                {#each group.table as row}
-                  <tr class:highlight={row.team.id === BAYERN_ID} class="clickable-row" onclick={() => openClubDetails(row.team, row)}>
-                    <td class="pos">{row.position}</td>
-                    <td class="team">
-                      <img src={row.team.crest} alt="" class="crest-sm" />
-                      <span>{row.team.tla || row.team.shortName}</span>
-                    </td>
-                    <td class="pts">{row.points}</td>
-                  </tr>
+        
+        {#if footballData.clKnockout}
+          <div class="bracket-container">
+            <!-- Round of 16 -->
+            <div class="bracket-column">
+              <h3 class="round-title">Round of 16</h3>
+              <div class="matches-list">
+                {#each r16OrderedIndices as idx}
+                  {@const match = footballData.clKnockout.roundOf16[idx]}
+                  {#if match}
+                    <div class="bracket-match-card" class:highlight-match={match.home.includes('Bayern') || match.away.includes('Bayern')}>
+                      <div class="match-teams-box">
+                        <div class="team-row" class:winner={isWinner(match.home, 'roundOf16', idx)} class:loser={isLoser(match.home, 'roundOf16', idx)}>
+                          <img src={match.homeCrest} alt="" class="crest-xs" />
+                          <span class="team-name-xs">{match.home}</span>
+                          <span class="score-xs">{match.scoreHome !== null ? match.scoreHome : '-'}</span>
+                        </div>
+                        <div class="team-row" class:winner={isWinner(match.away, 'roundOf16', idx)} class:loser={isLoser(match.away, 'roundOf16', idx)}>
+                          <img src={match.awayCrest} alt="" class="crest-xs" />
+                          <span class="team-name-xs">{match.away}</span>
+                          <span class="score-xs">{match.scoreAway !== null ? match.scoreAway : '-'}</span>
+                        </div>
+                      </div>
+                      <div class="match-meta-xs">
+                        <span class="agg-badge">{match.agg}</span>
+                      </div>
+                    </div>
+                  {/if}
                 {/each}
-              </tbody>
-            </table>
-          </Card>
-        {/each}
+              </div>
+            </div>
+
+            <!-- Quarter-Finals -->
+            <div class="bracket-column">
+              <h3 class="round-title">Quarter-Finals</h3>
+              <div class="matches-list">
+                {#each footballData.clKnockout.quarterFinals as match, idx}
+                  <div class="bracket-match-card" class:highlight-match={match.home.includes('Bayern') || match.away.includes('Bayern')}>
+                    <div class="match-teams-box">
+                      <div class="team-row" class:winner={isWinner(match.home, 'quarterFinals', idx)} class:loser={isLoser(match.home, 'quarterFinals', idx)}>
+                        <img src={match.homeCrest} alt="" class="crest-xs" />
+                        <span class="team-name-xs">{match.home}</span>
+                        <span class="score-xs">{match.scoreHome !== null ? match.scoreHome : '-'}</span>
+                      </div>
+                      <div class="team-row" class:winner={isWinner(match.away, 'quarterFinals', idx)} class:loser={isLoser(match.away, 'quarterFinals', idx)}>
+                        <img src={match.awayCrest} alt="" class="crest-xs" />
+                        <span class="team-name-xs">{match.away}</span>
+                        <span class="score-xs">{match.scoreAway !== null ? match.scoreAway : '-'}</span>
+                      </div>
+                    </div>
+                    <div class="match-meta-xs">
+                      <span class="agg-badge">{match.agg}</span>
+                    </div>
+                  </div>
+                {/each}
+              </div>
+            </div>
+
+            <!-- Semi-Finals -->
+            <div class="bracket-column">
+              <h3 class="round-title">Semi-Finals</h3>
+              <div class="matches-list">
+                {#each footballData.clKnockout.semiFinals as match, idx}
+                  <div class="bracket-match-card" class:highlight-match={match.home.includes('Bayern') || match.away.includes('Bayern')}>
+                    <div class="match-teams-box">
+                      <div class="team-row" class:winner={isWinner(match.home, 'semiFinals', idx)} class:loser={isLoser(match.home, 'semiFinals', idx)}>
+                        <img src={match.homeCrest} alt="" class="crest-xs" />
+                        <span class="team-name-xs">{match.home}</span>
+                        <span class="score-xs">{match.scoreHome !== null ? match.scoreHome : '-'}</span>
+                      </div>
+                      <div class="team-row" class:winner={isWinner(match.away, 'semiFinals', idx)} class:loser={isLoser(match.away, 'semiFinals', idx)}>
+                        <img src={match.awayCrest} alt="" class="crest-xs" />
+                        <span class="team-name-xs">{match.away}</span>
+                        <span class="score-xs">{match.scoreAway !== null ? match.scoreAway : '-'}</span>
+                      </div>
+                    </div>
+                    <div class="match-meta-xs">
+                      <span class="agg-badge">{match.agg}</span>
+                    </div>
+                  </div>
+                {/each}
+              </div>
+            </div>
+
+            <!-- Final -->
+            <div class="bracket-column">
+              <h3 class="round-title">Final</h3>
+              <div class="matches-list">
+                <div class="bracket-match-card final-card highlight-match">
+                  <div class="match-teams-box">
+                    <div class="team-row">
+                      {#if footballData.clKnockout.final.homeCrest}
+                        <img src={footballData.clKnockout.final.homeCrest} alt="" class="crest-xs" />
+                      {/if}
+                      <span class="team-name-xs font-bold">{footballData.clKnockout.final.home}</span>
+                      <span class="score-xs">{footballData.clKnockout.final.scoreHome !== null ? footballData.clKnockout.final.scoreHome : '-'}</span>
+                    </div>
+                    <div class="team-row">
+                      {#if footballData.clKnockout.final.awayCrest}
+                        <img src={footballData.clKnockout.final.awayCrest} alt="" class="crest-xs" />
+                      {/if}
+                      <span class="team-name-xs font-bold">{footballData.clKnockout.final.away}</span>
+                      <span class="score-xs">{footballData.clKnockout.final.scoreAway !== null ? footballData.clKnockout.final.scoreAway : '-'}</span>
+                    </div>
+                  </div>
+                  <div class="match-meta-xs final-meta">
+                    <div class="final-venue">🏟️ {footballData.clKnockout.final.venue}</div>
+                    <div class="final-date">📅 {footballData.clKnockout.final.date}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {/if}
       </div>
     {/if}
   </div>
@@ -426,36 +643,182 @@
     color: var(--text-main);
   }
 
-  /* Groups Grid */
-  .groups-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
+  /* Standing Zones styling */
+  tr.zone-ucl td.pos { border-left: 3px solid #3b82f6 !important; }
+  tr.zone-uel td.pos { border-left: 3px solid #f97316 !important; }
+  tr.zone-uecl td.pos { border-left: 3px solid #14b8a6 !important; }
+  tr.zone-playoff td.pos { border-left: 3px solid #eab308 !important; }
+  tr.zone-relegation td.pos { border-left: 3px solid #ef4444 !important; }
+  
+  tr.zone-cl-direct td.pos { border-left: 3px solid #10b981 !important; }
+  tr.zone-cl-playoff td.pos { border-left: 3px solid #3b82f6 !important; }
+
+  /* Knockout Bracket styling */
+  .knockout-section {
+    margin-top: 3rem;
   }
 
-  .group-name {
-    font-size: 1.1rem;
+  .knockout-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .knockout-header h2 {
+    font-size: 1.5rem;
     font-weight: 800;
-    margin-bottom: 1rem;
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  .knockout-icon {
+    color: var(--primary);
+  }
+
+  .bracket-container {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    padding: 2.5rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    height: 880px;
+    scrollbar-width: thin;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .bracket-column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 210px;
+    height: 100%;
+  }
+
+  .round-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--primary);
+    border-bottom: 2px solid var(--border);
+  }
+
+  .matches-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+  }
+
+  .bracket-match-card {
+    background: var(--bg-color);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .bracket-match-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(220, 38, 38, 0.35);
+  }
+
+  .highlight-match {
+    border-color: rgba(220, 38, 38, 0.25);
+    background: linear-gradient(180deg, rgba(220, 38, 38, 0.02) 0%, transparent 100%);
+  }
+
+  .match-teams-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .team-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .team-row.winner {
+    font-weight: 700;
     color: var(--text-main);
   }
 
-  .group-table {
-    width: 100%;
+  .team-row.loser {
+    opacity: 0.5;
   }
 
-  .group-table td {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .crest-sm {
-    width: 20px;
-    height: 20px;
+  .crest-xs {
+    width: 18px;
+    height: 18px;
     object-fit: contain;
-    margin-right: 0.5rem;
+  }
+
+  .team-name-xs {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .score-xs {
+    font-weight: 700;
+    min-width: 16px;
+    text-align: right;
+  }
+
+  .match-meta-xs {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.4rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .agg-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.03);
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+
+  .final-card {
+    border: 2px solid var(--primary);
+    background: rgba(220, 38, 38, 0.03);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+  }
+
+  .final-meta {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.25rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .final-venue, .final-date {
+    white-space: nowrap;
   }
 
   @media (max-width: 768px) {
